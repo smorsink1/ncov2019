@@ -71,7 +71,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' Imports Tidy Coronavirus Data
 #' 
 #' Imports data from public Johns Hopkins CSSEGISandData github repo on coronavirus
-#'   confirmed cases, deaths, and recoveries by location, then collects all information
+#'   confirmed cases, deaths, and recoveries by date and location, then collects all information
 #'   in a tidy dataset
 #' 
 #' @return Output is a dataframe with columns for date (Date), location (character),

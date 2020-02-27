@@ -5,7 +5,7 @@
 #'   day-by-day coronavirus confirmed cases, deaths, and recoveries by location
 #' 
 #' @param type a string representing the type of coronavirus data desired:
-#'   either "confirmed" for confirmed cases (default), "deaths" for deaths,
+#'   either "cases" for confirmed cases (default), "deaths" for deaths,
 #'   or "recovered" for recoveries
 #' 
 #' @return Output is a dataframe with rows representing locations,
@@ -16,15 +16,15 @@
 #' 
 #' @examples
 #' importCovidData()
-#' importCovidData("confirmed")
+#' importCovidData("cases")
 #' importCovidData("deaths")
 #' importCovidData("recovered") 
 #' 
-scrapeCovidData <- function(type = "confirmed") {
-  if (!(type %in% c("confirmed", "deaths", "recovered"))) {
-    stop ("type must be either confirmed (for confirmed cases), deaths, or recovered")
+scrapeCovidData <- function(type = "cases") {
+  if (!(type %in% c("cases", "deaths", "recovered"))) {
+    stop ("type must be either cases (for confirmed cases), deaths, or recovered")
   }
-  confirmed_link <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+  cases_link <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
   deaths_link <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
   recovered_link <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv"
   # accessing the correct link given the argument
@@ -41,7 +41,7 @@ scrapeCovidData <- function(type = "confirmed") {
 #' @param covid_df a time-series dataframe of the type scraped from 
 #'   JHUCSSEGISandData github repo (columns for dates, rows for locations)
 #' @param covid_df_name a character string representing the type of coronavirus data:
-#'   ie either "confirmed", "deaths", or "recovered"
+#'   ie either "cases", "deaths", or "recovered"
 #' 
 #' @return Output is a dataframe with columns for province, region, lat, long,
 #'   date, value, and value_type
@@ -50,7 +50,7 @@ scrapeCovidData <- function(type = "confirmed") {
 #' 
 #' @examples 
 #' tidyCovidData(scrapeCovidData())
-#' tidyCovidData(scrapeCovidData("confirmed"))
+#' tidyCovidData(scrapeCovidData("cases"))
 #' 
 tidyCovidData <- function(covid_df, covid_df_name) {
   # detecting date columns, pivoting the data to be longer
@@ -84,14 +84,10 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' 
 #' @export
 importCovidData <- function() {
-  types <- c("confirmed", "deaths", "recovered")
+  types <- c("cases", "deaths", "recovered")
   covid_data <- suppressMessages(lapply(types, scrapeCovidData))
   names(covid_data) <- types
   covid_data_tidy <- mapply(tidyCovidData, covid_data, names(covid_data),
                             SIMPLIFY = FALSE)
   return (dplyr::bind_rows(covid_data_tidy))
 }
-
-
-
-

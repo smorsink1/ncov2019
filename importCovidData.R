@@ -1,4 +1,3 @@
-
 #' Downloads Time-Series Coronavirus Data
 #'
 #' Imports data from public Johns Hopkins CSSEGISandData github repo on

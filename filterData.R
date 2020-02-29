@@ -1,4 +1,3 @@
-
 # filter by type (confirmed / deaths / recovered)
 ## only use scrapeCovidData to scrape the one that you need
 ## then use tidyCovidData to clean it up

@@ -5,8 +5,7 @@
 #' 
 #' @return Output is a dataframe with rows for date-location-case_type pairs
 #'   
-#' @importFrom readr read_csv
-#' @importFrom readr cols
+#' @importFrom readr read_csv cols col_character
 #' @importFrom magrittr %>%
 #' 
 #' @examples
@@ -14,8 +13,8 @@
 #'
 scrapeZikaData <- function() {
   link <- "https://raw.githubusercontent.com/mcolon21/ncov2019data/master/cdc_zika.csv"
-  data <- readr::read_csv(link, col_types = readr::cols(value = col_character(),
-                                                        report_date = col_character()))
+  data <- readr::read_csv(link, col_types = readr::cols(value = readr::col_character(),
+                                                        report_date = readr::col_character()))
   # parsing issues:
   ## * in value in Brazil entries (rows 2415, 2784, 5193)
   ### 2415 is: 125*5 (should be 125), 2784 is: 149*5 (should be 149), 5193 is: 5* (should be 5)
@@ -55,6 +54,7 @@ scrapeZikaData <- function() {
 #' 
 importZikaData <- function() {
   data <- scrapeZikaData()
+  data$disease <- "zika"
   data$region <- data$location %>%
     strsplit(split = "-") %>%
     sapply(FUN = `[`, 1)
@@ -67,6 +67,6 @@ importZikaData <- function() {
                   -location, -location_type) %>%
     # renaming and reordering to match consistent format
     dplyr::rename("value_type" = "data_field", "date" = "report_date") %>%
-    dplyr::select(province, region, date, value, value_type)
+    dplyr::select(disease, province, region, date, value, value_type)
   return (data_tidy)
 }

@@ -76,7 +76,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' @return Output is a dataframe with columns for date (Date), location (character),
 #'   value_type (character; either "cases", "deaths", or "recoveries"), and value (int)
 #'
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows select
 #' 
 #' @examples 
 #' importCovidData()
@@ -88,5 +88,7 @@ importCovidData <- function() {
   names(covid_data) <- types
   covid_data_tidy <- mapply(tidyCovidData, covid_data, names(covid_data),
                             SIMPLIFY = FALSE)
-  return (dplyr::bind_rows(covid_data_tidy))
+  covid_data_df <- dplyr::bind_rows(covid_data_tidy)
+  covid_data_df$disease <- "covid"
+  return (select(covid_data_df, disease, dplyr::everything()))
 }

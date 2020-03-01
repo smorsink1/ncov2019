@@ -76,7 +76,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' @return Output is a dataframe with columns for date (Date), location (character),
 #'   value_type (character; either "cases", "deaths", or "recoveries"), and value (int)
 #'
-#' @importFrom dplyr bind_rows select
+#' @importFrom dplyr bind_rows select everything
 #' 
 #' @examples 
 #' importCovidData()

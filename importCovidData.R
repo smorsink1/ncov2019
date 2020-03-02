@@ -97,5 +97,5 @@ importCovidData <- function() {
                             SIMPLIFY = FALSE)
   covid_data_df <- dplyr::bind_rows(covid_data_tidy)
   covid_data_df$disease <- "covid"
-  return (select(covid_data_df, disease, dplyr::everything()))
+  return (dplyr::select(covid_data_df, disease, dplyr::everything()))
 }

@@ -46,5 +46,14 @@ importSARSData <- function() {
     dplyr::select(disease, region, date, value, value_type) %>%
     dplyr::mutate(value = as.integer(value)) %>%
     dplyr::arrange(date, region, value_type)
+  # Cleaning region names
+  sars_df$region[grepl("China Hong Kong Special Administrative Region", sars_df$region)] <- "Hong Kong Special Administrative Region of China"
+  sars_df$region[grepl("United States", sars_df$region)] <- "United States"
+  sars_df$region[grepl("Philippines", sars_df$region)] <- "Philippines"
+  sars_df$region[grepl("Canada", sars_df$region)] <- "Canada"
+  sars_df$region[grepl("Viet Nam", sars_df$region)] <- "Viet Nam"
+  sars_df$region[sars_df$region %in% c("China Guangdong Province",
+                                       "China3",
+                                       "China^5")] <- "China"
   return(sars_df)
 }

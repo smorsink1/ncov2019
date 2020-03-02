@@ -60,7 +60,7 @@ dayOfDiseaseColumn <- function(df) {
     stop('The \"date\" column must be of class \"Date\"')
   }
   df = df %>%
-    dplyr::mutate(day_of_disease = 1 + as.integer(date - min(date)))
+    dplyr::mutate(day_of_disease = 1 + as.integer(date - min(date, na.rm = TRUE)))
   return(df)
 }
 

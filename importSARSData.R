@@ -40,7 +40,7 @@ importSARSData <- function() {
                   recoveries = `Number recovered`) %>%
     tidyr::gather(cases, deaths, recoveries, key = "value_type", value = "value") %>%
     dplyr::mutate(disease = "sars") %>%
-    dplyr::select(disease, date, region, value_type, value) %>%
+    dplyr::select(disease, region, date, value, value_type) %>%
     dplyr::mutate(value = as.integer(value)) %>%
     dplyr::arrange(date, region, value_type)
   return(sars_df)

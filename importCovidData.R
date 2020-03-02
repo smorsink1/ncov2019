@@ -19,6 +19,8 @@
 #' importCovidData("deaths")
 #' importCovidData("recovered") 
 #' 
+#' @export
+#' 
 scrapeCovidData <- function(type = "cases") {
   if (!(type %in% c("cases", "deaths", "recovered"))) {
     stop ("type must be either cases (for confirmed cases), deaths, or recovered")
@@ -30,7 +32,9 @@ scrapeCovidData <- function(type = "cases") {
   link <- paste0(type, "_link") %>%
     parse(text = .) %>%
     eval()
-  return (readr::read_csv(link))
+  data <- tryCatch(readr::read_csv(link),
+                   error = function(e) stop ("Data no longer found at url"))
+  return (data)
 }
 
 #' Tidies up scraped coronavirus data
@@ -50,6 +54,8 @@ scrapeCovidData <- function(type = "cases") {
 #' @examples 
 #' tidyCovidData(scrapeCovidData())
 #' tidyCovidData(scrapeCovidData("cases"))
+#' 
+#' @export
 #' 
 tidyCovidData <- function(covid_df, covid_df_name) {
   # detecting date columns, pivoting the data to be longer
@@ -82,6 +88,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' importCovidData()
 #' 
 #' @export
+#' 
 importCovidData <- function() {
   types <- c("cases", "deaths", "recovered")
   covid_data <- suppressMessages(lapply(types, scrapeCovidData))

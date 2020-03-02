@@ -10,11 +10,14 @@
 #' 
 #' @examples
 #' scrapeZikaData()
+#' 
+#' @export
 #'
 scrapeZikaData <- function() {
   link <- "https://raw.githubusercontent.com/mcolon21/ncov2019data/master/cdc_zika.csv"
-  data <- readr::read_csv(link, col_types = readr::cols(value = readr::col_character(),
-                                                        report_date = readr::col_character()))
+  data <- tryCatch(readr::read_csv(link, col_types = readr::cols(value = readr::col_character(),
+                                                                 report_date = readr::col_character())),
+                   error = function(e) stop ("Data no longer found at url"))
   # parsing issues:
   ## * in value in Brazil entries (rows 2415, 2784, 5193)
   ### 2415 is: 125*5 (should be 125), 2784 is: 149*5 (should be 149), 5193 is: 5* (should be 5)

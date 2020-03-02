@@ -9,10 +9,13 @@
 #' 
 #' @examples 
 #' scrapeSARSData()
+#' 
+#' @export
 #'
 scrapeSARSData <- function() {
   link <- "https://raw.githubusercontent.com/mcolon21/ncov2019data/master/sars_data.csv"
-  data <- suppressMessages(readr::read_csv(link))
+  data <- tryCatch(suppressMessages(readr::read_csv(link)),
+                   error = function(e) stop ("Data no longer found at url"))
   return(data)
 }
 

@@ -1,0 +1,84 @@
+country_name,covid_name,zika_name,sars_name,latitude,longitude
+China,Mainland China,NA,China,35.86166,104.195397
+Thailand,Thailand,NA,Thailand,15.870032,100.992541
+Japan,Japan,NA,Japan,36.204824,138.252924
+South Korea,South Korea,NA,Republic of Korea,35.907757,127.766922
+Taiwan,Taiwan,NA,Taiwan China,23.69781,120.960515
+Taiwan,Taiwan,NA,China Taiwan,23.69781,120.960515
+United States,US,United_States,United States,37.09024,-95.712891
+Macau,Macau,NA,China Macao Special Administrative Region,22.198745,113.543873
+Hong Kong,Hong Kong,NA,Hong Kong Special Administrative Region of China,22.396428,114.109497
+Singapore,Singapore,NA,Singapore,1.352083,103.819836
+Vietnam,Vietnam,NA,Viet Nam,14.058324,108.277199
+France,France,NA,France,46.227638,2.213749
+Nepal,Nepal,NA,NA,28.394857,84.124008
+Malaysia,Malaysia,NA,Malaysia,4.210484,101.975766
+Canada,Canada,NA,Canada,56.130366,-106.346771
+Australia,Australia,NA,Australia,-25.274398,133.775136
+Cambodia,Cambodia,NA,NA,12.565679,104.990963
+Sri Lanka,Sri Lanka,NA,NA,7.873054,80.771797
+Germany,Germany,NA,Germany,51.165691,10.451526
+Finland,Finland,NA,Finland,61.92411,25.748151
+United Arab Emirates,United Arab Emirates,NA,NA,23.424076,53.847818
+Philippines,Philippines,NA,Philippines,12.879721,121.774017
+India,India,NA,India,20.593684,78.96288
+Italy,Italy,NA,Italy,41.87194,12.56738
+United Kingdom,UK,NA,United Kingdom,55.378051,-3.435973
+Russia,Russia,NA,Russian Federation,61.52401,105.318756
+Sweden,Sweden,NA,Sweden,60.128161,18.643501
+Spain,Spain,NA,Spain,40.463667,-3.74922
+Belgium,Belgium,NA,Belgium,50.503887,4.469936
+Egypt,Egypt,NA,NA,26.820553,30.802498
+Iran,Iran,NA,NA,32.427908,53.688046
+Lebanon,Lebanon,NA,NA,33.854721,35.862285
+Iraq,Iraq,NA,NA,33.223191,43.679291
+Oman,Oman,NA,NA,21.512583,55.923255
+Afghanistan,Afghanistan,NA,NA,33.93911,67.709953
+Bahrain,Bahrain,NA,NA,25.930414,50.637772
+Kuwait,Kuwait,NA,Kuwait,29.31166,47.481766
+Algeria,Algeria,NA,NA,28.033886,1.659626
+Croatia,Croatia,NA,NA,45.1,15.2
+Switzerland,Switzerland,NA,Switzerland,46.818188,8.227512
+Austria,Austria,NA,NA,47.516231,14.550072
+Israel,Israel,NA,NA,31.046051,34.851612
+Pakistan,Pakistan,NA,NA,30.375321,69.345116
+Brazil,Brazil,Brazil,Brazil,-14.235004,-51.92528
+Georgia,Georgia,NA,NA,42.315407,43.356892
+Greece,Greece,NA,NA,39.074208,21.824312
+Macedonia [FYROM],North Macedonia,NA,NA,41.608635,21.745275
+Norway,Norway,NA,NA,60.472024,8.468946
+Romania,Romania,NA,Romania,45.943161,24.96676
+Denmark,Denmark,NA,NA,56.26392,9.501785
+Estonia,Estonia,NA,NA,58.595272,25.013607
+Netherlands,Netherlands,NA,NA,52.132633,5.291266
+San Marino,San Marino,NA,NA,43.94236,12.457777
+Belarus,Belarus,NA,NA,53.709807,27.953389
+Iceland,Iceland,NA,NA,64.963051,-19.020835
+Lithuania,Lithuania,NA,NA,55.169438,23.881275
+Mexico,Mexico,Mexico,NA,23.634501,-102.552784
+New Zealand,New Zealand,NA,New Zealand,-40.900557,174.885971
+Nigeria,Nigeria,NA,NA,9.081999,8.675277
+Ireland,Ireland,NA,Republic of Ireland,53.41291,-8.24389
+Luxembourg,Luxembourg,NA,NA,49.815273,6.129583
+Monaco,Monaco,NA,NA,43.750298,7.412841
+Qatar,Qatar,NA,NA,25.354826,51.183884
+Ecuador,Ecuador,Ecuador,NA,-1.831239,-78.183406
+Azerbaijan,Azerbaijan,NA,NA,40.143105,47.576927
+Czech Republic,Czech Republic,NA,NA,49.817492,15.472962
+Armenia,Armenia,NA,NA,40.069099,45.038189
+Dominican Republic,Dominican Republic,Dominican_Republic,NA,18.735693,-70.162651
+Argentina,NA,Argentina,NA,-38.416097,-63.616672
+Colombia,NA,Colombia,Colombia,4.570868,-74.297333
+El Salvador,NA,El_Salvador,NA,13.794185,-88.89653
+Guatemala,NA,Guatemala,NA,15.783471,-90.230759
+Haiti,NA,Haiti,NA,18.971187,-72.285215
+Nicaragua,NA,Nicaragua,NA,12.865416,-85.207229
+Panama,NA,Panama,NA,8.537981,-80.782127
+Puerto Rico,NA,Puerto_Rico,NA,18.220833,-66.590149
+U.S. Virgin Islands,NA,United_States_Virgin_Islands,NA,18.335765,-64.896335
+Slovenia,NA,NA,Slovenia,46.151241,14.995463
+South Africa,NA,NA,South Africa,-30.559482,22.937506
+Indonesia,NA,NA,Indonesia,-0.789275,113.921327
+Mongolia,NA,NA,Mongolia,46.862496,103.846656
+Bulgaria,NA,NA,Bulgaria,42.733883,25.48583
+Poland,NA,NA,Poland,51.919438,19.145136

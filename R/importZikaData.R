@@ -68,7 +68,7 @@ reformatZikaData <- function() {
   data_tidy <- data %>%
     # Brazil subregions (which have cumulative stats) are coded as "region"
     # since they simply accumulate data that is already present, these rows are removed
-    dplyr::filter(!(region %in% c("Centro", "Nordeste", "Norte", "Sudeste", "sul"))) %>%
+    dplyr::filter(!(region %in% c("Centro", "Nordeste", "Norte", "Sudeste", "Sul"))) %>%
     # drop unnecessary columns
     dplyr::select(-data_field_code, -time_period, -time_period_type, -unit,
                   -location, -location_type) %>%

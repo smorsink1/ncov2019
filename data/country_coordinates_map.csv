@@ -1,4 +1,4 @@
-country_name,covid_name,zika_name,sars_name,latitude,longitude
+region_name,covid_name,zika_name,sars_name,latitude,longitude
 China,Mainland China,NA,China,35.86166,104.195397
 Thailand,Thailand,NA,Thailand,15.870032,100.992541
 Japan,Japan,NA,Japan,36.204824,138.252924
@@ -67,7 +67,17 @@ Azerbaijan,Azerbaijan,NA,NA,40.143105,47.576927
 Czech Republic,Czech Republic,NA,NA,49.817492,15.472962
 Armenia,Armenia,NA,NA,40.069099,45.038189
 Dominican Republic,Dominican Republic,Dominican_Republic,NA,18.735693,-70.162651
-Argentina,NA,Argentina,NA,-38.416097,-63.616672
+Indonesia,Indonesia,NA,Indonesia,-0.789275,113.921327
+Portugal,Portugal,NA,NA,39.399872,-8.224454
+Andorra,Andorra,NA,NA,42.546245,1.601554
+Latvia,Latvia,NA,NA,56.879635,24.603189
+Morocco,Morocco,NA,NA,31.791702,-7.09262
+Saudi Arabia,Saudi Arabia,NA,NA,23.885942,45.079162
+Senegal,Senegal,NA,NA,14.497401,-14.452362
+Argentina,Argentina,Argentina,NA,-38.416097,-63.616672
+Chile,Chile,NA,NA,-35.675147,-71.542969
+Jordan,Jordan,NA,NA,30.585164,36.238414
+Ukraine,Ukraine,NA,NA,48.379433,31.16558
 Colombia,NA,Colombia,Colombia,4.570868,-74.297333
 El Salvador,NA,El_Salvador,NA,13.794185,-88.89653
 Guatemala,NA,Guatemala,NA,15.783471,-90.230759
@@ -78,7 +88,6 @@ Puerto Rico,NA,Puerto_Rico,NA,18.220833,-66.590149
 U.S. Virgin Islands,NA,United_States_Virgin_Islands,NA,18.335765,-64.896335
 Slovenia,NA,NA,Slovenia,46.151241,14.995463
 South Africa,NA,NA,South Africa,-30.559482,22.937506
-Indonesia,NA,NA,Indonesia,-0.789275,113.921327
 Mongolia,NA,NA,Mongolia,46.862496,103.846656
 Bulgaria,NA,NA,Bulgaria,42.733883,25.48583
 Poland,NA,NA,Poland,51.919438,19.145136

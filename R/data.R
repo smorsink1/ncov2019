@@ -16,3 +16,35 @@
 #' }
 #' @source \url{https://developers.google.com/public-data/docs/canonical/countries_csv}
 "country_coordinates_map"
+
+#' Zika Virus Data
+#' 
+#' Description
+#'   
+#' @format A data frame with 83 rows and 6 columns:
+#' \describe{
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#' }
+#' @source \url{url}
+"data"
+
+#' SARS Data
+#' 
+#' Description
+#'   
+#' @format A data frame with 83 rows and 6 columns:
+#' \describe{
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#'   \item{col_name}{col_description}
+#' }
+#' @source \url{url}
+"data"

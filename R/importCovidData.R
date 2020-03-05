@@ -89,6 +89,8 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' 
 #' @export
 #' 
+
+# rename accumulateCovidData
 importCovidData <- function() {
   types <- c("cases", "deaths", "recovered")
   covid_data <- suppressMessages(lapply(types, scrapeCovidData))
@@ -99,3 +101,6 @@ importCovidData <- function() {
   covid_data_df$disease <- "covid"
   return (dplyr::select(covid_data_df, disease, dplyr::everything()))
 }
+
+# write importCovidData
+# which involves merging with the coordinate and population data

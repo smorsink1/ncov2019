@@ -35,6 +35,8 @@ scrapeSARSData <- function() {
 #' importSARSData()
 #'
 #' @export
+
+# rename cleanSarsData
 importSARSData <- function() {
   sars_df = scrapeSARSData() %>%
     dplyr::rename(region = Country, 
@@ -57,3 +59,6 @@ importSARSData <- function() {
                                        "China^5")] <- "China"
   return(sars_df)
 }
+
+# write importSarsData
+# which involves merging with the coordinate and population data

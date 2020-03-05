@@ -97,6 +97,8 @@ reformatZikaData <- function() {
 #' 
 #' @export
 #'
+
+# rename to cleanZikaData
 importZikaData <- function() {
   data <- reformatZikaData()
   data_split <- split(data, data$region)
@@ -187,3 +189,5 @@ importZikaData <- function() {
   return (dplyr::bind_rows(data_split))
 }
 
+# add importZikaData 
+# which involves merging with the coordinate and population data 

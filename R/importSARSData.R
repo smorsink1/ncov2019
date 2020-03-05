@@ -91,6 +91,7 @@ importSARSData <- function(pop_data) {
     left_join(pop_map, by = c("region" = "sars_name")) %>%
     left_join(coord_map, by = c("region" = "sars_name"))
   # TODO: should we input 0 for NA values?
+  # TODO: should we get rid of region %in% c("Total", "Number of deaths")
   return (sars_data)
 }
 

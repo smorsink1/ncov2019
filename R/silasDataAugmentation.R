@@ -99,7 +99,7 @@ buildPopulationMap <- function(pop_data) {
   covid_map$region_name[is.na(covid_joined$country_code)] <- NA
   covid_map$region_name[covid_map$covid_name == "Mainland China"] <- "China"
   covid_map$region_name[covid_map$covid_name == "South Korea"] <- "Korea, Rep."
-  covid_map$region_name[covid_map$covid_name == "Taiwan"] <- "EEEEEEEEEEEEEEEK"
+  covid_map$region_name[covid_map$covid_name == "Taiwan"] <- "Taiwan"
   #### no Taiwan in the population data
   covid_map$region_name[covid_map$covid_name == "US"] <- "United States"
   covid_map$region_name[covid_map$covid_name == "Macau"] <- "Macao SAR, China"
@@ -129,8 +129,9 @@ buildPopulationMap <- function(pop_data) {
   sars_map$region_name[is.na(sars_joined$country_code)] <- NA
   sars_map$region_name[sars_map$sars_name == "Hong Kong Special Administrative Region of China"] <- "Hong Kong SAR, China"
   sars_map$region_name[sars_map$sars_name == "Viet Nam"] <- "Vietnam"
-  sars_map$region_name[sars_map$sars_name == "Taiwan China"] <- "EEEEEEEEEEEEEEEK"
-  sars_map$region_name[sars_map$sars_name == "China Taiwan"] <- "EEEEEEEEEEEEEEEK"
+  sars_map$region_name[sars_map$sars_name == "Taiwan China"] <- "Taiwan"
+  sars_map$region_name[sars_map$sars_name == "China Taiwan"] <- "Taiwan"
+  #### no Taiwan in the population data
   sars_map$region_name[sars_map$sars_name == "Republic of Ireland"] <- "Ireland"
   sars_map$region_name[sars_map$sars_name == "Republic of Korea"] <- "Korea, Rep."
   sars_map$region_name[sars_map$sars_name == "China Macao Special Administrative Region"] <- "Macao SAR, China"
@@ -142,6 +143,11 @@ buildPopulationMap <- function(pop_data) {
     dplyr::left_join(pop_data, by = c("region_name" = "country_name")) %>%
     dplyr::select(region_name, tidyselect::everything())
   
+  ## Imputing Taiwan population data
+  ## from https://www.macrotrends.net/countries/TWN/taiwan/population
+  region_map$pop_2003[region_map$region_name == "Taiwan"] <- 22419792
+  region_map$pop_2016[region_map$region_name == "Taiwan"] <- 23618200
+  region_map$pop_2018[region_map$region_name == "Taiwan"] <- 23726460
+  
   return (region_map)
 }
-

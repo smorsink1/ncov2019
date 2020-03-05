@@ -85,11 +85,13 @@ buildCoordinateMap <- function() {
 #' 
 #' @export
 #'   
-buildPopulationMap <- function(pop_data) {
+buildPopulationMap <- function() {
   # TODO: change these names from import to something else
   covid_data <- importCovidData()
   zika_data <- importZikaData()
   sars_data <- cleanSARSData()
+  data("country_pop_data_raw", envir = environment())
+  pop_data <- country_pop_data_raw
   
   # Covid
   covid_countries <- unique(covid_data$region)
@@ -151,3 +153,4 @@ buildPopulationMap <- function(pop_data) {
   
   return (region_map)
 }
+

@@ -66,31 +66,25 @@ cleanSARSData <- function() {
 #' Imports data from public github repo on SARS cases by date and location,
 #'   reformats and cleans the data, and merges with population and latitude-longitude data
 #' 
-#' @param pop_data raw population data (ie data(pop_data_raw)) to be processed and merged
-#'   with SARS data. Must be a data-frame with no-NA columns "country_name" and "country_code". 
-#' 
 #' @return Output is dataframe with columns for ... 
 #' 
 #' @importFrom magrittr %>%
-#' @importFrom tidyr gather
-#' @importFrom dplyr rename select arrange
+#' @importFrom dplyr left_join select
 #' 
 #' @examples
-#' data(pop_data_raw)
-#' cleanSARSData(pop_data_raw)
+#' importSARSData()
 #'
 #' @export
-importSARSData <- function(pop_data) {
-  # TODO: maybe also pass in zika_data, sars_data, covid_data ?
-  # make these things arguments to buildMap functions 
-  pop_map <- buildPopulationMap(pop_data) %>%
+#' 
+importSARSData <- function() {
+  pop_map <- buildPopulationMap() %>%
     dplyr::select(sars_name, pop_2003, pop_2016, pop_2018)
   coord_map <- buildCoordinateMap() %>%
     dplyr::select(sars_name, latitude, longitude)
   sars_data <- cleanSARSData() %>%
-    left_join(pop_map, by = c("region" = "sars_name")) %>%
-    left_join(coord_map, by = c("region" = "sars_name"))
-  # TODO: should we input 0 for NA values?
+    dplyr::left_join(pop_map, by = c("region" = "sars_name")) %>%
+    dplyr::left_join(coord_map, by = c("region" = "sars_name"))
+  # TODO: should we input 0 for NA values in column "value"?
   # TODO: should we get rid of region %in% c("Total", "Number of deaths")
   return (sars_data)
 }

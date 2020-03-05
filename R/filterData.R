@@ -35,9 +35,13 @@
 #' 
 #' @export
 #'
-filterDiseaseData <- function(disease = c("covid", "sars", "zika"), first_date = NA, last_date = NA, 
+filterDiseaseData <- function(data = NA, disease = c("covid", "sars", "zika"), first_date = NA, last_date = NA, 
                   country = c(), province = c(), type = c("cases", "deaths", "recoveries"),
                   min_value = 0, max_value = Inf) {
+  
+  if(!is.na(data)) {
+    df = data
+  }
   
   disease = match.arg(disease)
   

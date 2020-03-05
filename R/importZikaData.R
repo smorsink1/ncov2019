@@ -189,5 +189,10 @@ importZikaData <- function() {
   return (dplyr::bind_rows(data_split))
 }
 
+# TODO
 # add importZikaData 
 # which involves merging with the coordinate and population data 
+
+# TODO: 
+# after building a version of the Zika data, saving this in data dir,
+# add argument specifying where you want to get Zika data from (ie from web or from package)

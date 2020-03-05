@@ -89,3 +89,9 @@ importSARSData <- function() {
   return (sars_data)
 }
 
+
+# TODO: 
+# after building a version of the SARS data, saving this in data dir,
+# add argument specifying where you want to get SARS data from (ie from web or from package)
+
+

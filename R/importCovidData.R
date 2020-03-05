@@ -102,5 +102,11 @@ importCovidData <- function() {
   return (dplyr::select(covid_data_df, disease, dplyr::everything()))
 }
 
+# TODO
 # write importCovidData
 # which involves merging with the coordinate and population data
+
+# TODO: 
+# after building a version of the Covid data, saving this in data dir,
+# add argument specifying where you want to get Covid data from (ie from web or from package)
+

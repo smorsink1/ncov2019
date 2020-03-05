@@ -136,7 +136,7 @@ importZikaData <- function() {
   # El_Salvador
   data_split[["El_Salvador"]] <- data_split[["El_Salvador"]] %>%
     dplyr::filter(value_type %in% c("cumulative_suspected_total", "cumulative_confirmed")) %>%
-    dplyr::mutate(value_type = recode(value_type, 
+    dplyr::mutate(value_type = dplyr::recode(value_type, 
                                       "cumulative_suspected_total" = "cumulative_suspected_cases",
                                       "cumulative_confirmed" = "cumulative_confirmed_cases")) %>%
     ## the rows with NA for province are totals across region, numbers check out, so

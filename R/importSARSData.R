@@ -20,9 +20,10 @@ scrapeSARSData <- function() {
 }
 
 
-#' Imports SARS disease data
+#' Loads and cleans SARS disease data
 #'
-#' Tidies and imports the SARS disease data to conform to the necessary tidy format.
+#' Tidies and imports the SARS disease data to conform to the tidy format,
+#'   does NOT include population data or latitude/longitude data
 #' 
 #' @return Output is a dataframe with columns for date (Date), region (character),
 #'   value_type (character; either "cases", "deaths", or "recoveries"), and value (int)
@@ -32,12 +33,12 @@ scrapeSARSData <- function() {
 #' @importFrom dplyr rename select arrange
 #' 
 #' @examples
-#' importSARSData()
+#' cleanSARSData()
 #'
 #' @export
 
 # rename cleanSarsData
-importSARSData <- function() {
+cleanSARSData <- function() {
   sars_df = scrapeSARSData() %>%
     dplyr::rename(region = Country, 
                   cases = `Cumulative number of cases`,
@@ -60,5 +61,36 @@ importSARSData <- function() {
   return(sars_df)
 }
 
-# write importSarsData
-# which involves merging with the coordinate and population data
+#' Import SARS data
+#' 
+#' Imports data from public github repo on SARS cases by date and location,
+#'   reformats and cleans the data, and merges with population and latitude-longitude data
+#' 
+#' @param pop_data raw population data (ie data(pop_data_raw)) to be processed and merged
+#'   with SARS data. Must be a data-frame with no-NA columns "country_name" and "country_code". 
+#' 
+#' @return Output is dataframe with columns for ... 
+#' 
+#' @importFrom magrittr %>%
+#' @importFrom tidyr gather
+#' @importFrom dplyr rename select arrange
+#' 
+#' @examples
+#' data(pop_data_raw)
+#' cleanSARSData(pop_data_raw)
+#'
+#' @export
+importSARSData <- function(pop_data) {
+  # TODO: maybe also pass in zika_data, sars_data, covid_data ?
+  # make these things arguments to buildMap functions 
+  pop_map <- buildPopulationMap(pop_data) %>%
+    dplyr::select(sars_name, pop_2003, pop_2016, pop_2018)
+  coord_map <- buildCoordinateMap() %>%
+    dplyr::select(sars_name, latitude, longitude)
+  sars_data <- cleanSARSData() %>%
+    left_join(pop_map, by = c("region" = "sars_name")) %>%
+    left_join(coord_map, by = c("region" = "sars_name"))
+  # TODO: should we input 0 for NA values?
+  return (sars_data)
+}
+

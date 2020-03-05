@@ -18,7 +18,7 @@
 buildCoordinateMap <- function() {
   covid_data <- importCovidData()
   zika_data <- importZikaData()
-  sars_data <- importSARSData()
+  sars_data <- cleanSARSData()
   country_data <- importCoordinateData()
   
   # Covid
@@ -79,13 +79,17 @@ buildCoordinateMap <- function() {
 #' @importFrom dplyr left_join full_join filter
 #' @importFrom tidyselect everything
 #'
+#' @examples 
+#'   data(pop_data_raw)
+#'   buildPopulationMap(pop_data_raw)
+#' 
 #' @export
 #'   
-buildPopulationMap <- function() {
+buildPopulationMap <- function(pop_data) {
+  # TODO: change these names from import to something else
   covid_data <- importCovidData()
   zika_data <- importZikaData()
-  sars_data <- importSARSData()
-  pop_data # figure out how to load in country_pop_data_raw.csv from data folder
+  sars_data <- cleanSARSData()
   
   # Covid
   covid_countries <- unique(covid_data$region)
@@ -140,3 +144,4 @@ buildPopulationMap <- function() {
   
   return (region_map)
 }
+

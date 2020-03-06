@@ -80,7 +80,7 @@ reformatZikaData <- function() {
   return (data_tidy)
 }
 
-#' Import Zika Data
+#' Clean Zika Data
 #' 
 #' Imports data from public github repo on Zika cases by date and location, 
 #'   reformats the data into date/location/values type combinations, and cleans
@@ -93,13 +93,11 @@ reformatZikaData <- function() {
 #' @importFrom magrittr %>%
 #' 
 #' @examples 
-#' importZikaData()
+#' cleanZikaData()
 #' 
 #' @export
 #'
-
-# rename to cleanZikaData
-importZikaData <- function() {
+cleanZikaData <- function() {
   data <- reformatZikaData()
   data_split <- split(data, data$region)
   # Argentina
@@ -189,9 +187,31 @@ importZikaData <- function() {
   return (dplyr::bind_rows(data_split))
 }
 
-# TODO
-# add importZikaData 
-# which involves merging with the coordinate and population data 
+#' Import Zika Data
+#' 
+#' Imports data from public github repo on Zika cases by date and location,
+#'   reformats, cleans, and merges with population and latitude-longitude data
+#'
+#' @return Output is a dataframe with columns for ...
+#' 
+#' @importFrom magrittr %>%
+#' @importFrom dplyr left_join select
+#' 
+#' @examples 
+#' importZikaData()
+#' 
+#' @export
+#' 
+importZikaData <- function() {
+  pop_map <- buildPopulationMap() %>%
+    dplyr::select(zika_name, pop_2016)
+  coord_map <- buildCoordinateMap() %>%
+    dplyr::select(zika_name, latitude, longitude)
+  zika_data <- cleanZikaData() %>%
+    dplyr::left_join(pop_map, by = c("region" = "zika_name")) %>%
+    dplyr::left_join(coord_map, by = c("region" = "zika_name"))
+  return (zika_data)
+}
 
 # TODO: 
 # after building a version of the Zika data, saving this in data dir,

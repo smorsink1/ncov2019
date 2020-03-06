@@ -78,7 +78,7 @@ cleanSARSData <- function() {
 #' 
 importSARSData <- function() {
   pop_map <- buildPopulationMap() %>%
-    dplyr::select(sars_name, pop_2003, pop_2016, pop_2018)
+    dplyr::select(sars_name, pop_2003)
   coord_map <- buildCoordinateMap() %>%
     dplyr::select(sars_name, latitude, longitude)
   sars_data <- cleanSARSData() %>%
@@ -88,7 +88,6 @@ importSARSData <- function() {
   # TODO: should we get rid of region %in% c("Total", "Number of deaths")
   return (sars_data)
 }
-
 
 # TODO: 
 # after building a version of the SARS data, saving this in data dir,

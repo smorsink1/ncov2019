@@ -86,9 +86,8 @@ buildCoordinateMap <- function() {
 #' @export
 #'   
 buildPopulationMap <- function() {
-  # TODO: change these names from import to something else
-  covid_data <- importCovidData()
-  zika_data <- importZikaData()
+  covid_data <- accumulateCovidData()
+  zika_data <- cleanZikaData()
   sars_data <- cleanSARSData()
   data("country_pop_data_raw", envir = environment())
   pop_data <- country_pop_data_raw
@@ -145,7 +144,7 @@ buildPopulationMap <- function() {
     dplyr::left_join(pop_data, by = c("region_name" = "country_name")) %>%
     dplyr::select(region_name, tidyselect::everything())
   
-  ## Imputing Taiwan population data
+  ## Inputing Taiwan population data
   ## from https://www.macrotrends.net/countries/TWN/taiwan/population
   region_map$pop_2003[region_map$region_name == "Taiwan"] <- 22419792
   region_map$pop_2016[region_map$region_name == "Taiwan"] <- 23618200

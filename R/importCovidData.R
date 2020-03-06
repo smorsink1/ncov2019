@@ -73,7 +73,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
   return (covid_df_tidy)
 }
 
-#' Imports Tidy Coronavirus Data
+#' Accumulate Tidy Coronavirus Data
 #' 
 #' Imports data from public Johns Hopkins CSSEGISandData github repo on coronavirus
 #'   confirmed cases, deaths, and recoveries by date and location, then collects all information
@@ -82,16 +82,15 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' @return Output is a dataframe with columns for date (Date), location (character),
 #'   value_type (character; either "cases", "deaths", or "recoveries"), and value (int)
 #'
-#' @importFrom dplyr bind_rows select everything
+#' @importFrom dplyr bind_rows select
+#' @importFrom tidyselect everything
 #' 
 #' @examples 
 #' importCovidData()
 #' 
 #' @export
 #' 
-
-# rename accumulateCovidData
-importCovidData <- function() {
+accumulateCovidData <- function() {
   types <- c("cases", "deaths", "recovered")
   covid_data <- suppressMessages(lapply(types, scrapeCovidData))
   names(covid_data) <- types
@@ -102,9 +101,28 @@ importCovidData <- function() {
   return (dplyr::select(covid_data_df, disease, dplyr::everything()))
 }
 
-# TODO
-# write importCovidData
-# which involves merging with the coordinate and population data
+#' Import Covid Data
+#' 
+#' Imports data from public github repo on Covid cases by date and location 
+#'   (with latitude and longitude), reformats, cleans, and merges with population data
+#'
+#' @return Output is a dataframe with columns for ...
+#' 
+#' @importFrom magrittr %>%
+#' @importFrom dplyr left_join select
+#' 
+#' @examples 
+#' importZikaData()
+#' 
+#' @export
+#' 
+importZikaData <- function() {
+  pop_map <- buildPopulationMap() %>%
+    dplyr::select(covid_name, pop_2018)
+  covid_data <- accumulateCovidData() %>%
+    dplyr::left_join(pop_map, by = c("region" = "covid_name"))
+  return (covid_data)
+}
 
 # TODO: 
 # after building a version of the Covid data, saving this in data dir,

@@ -65,32 +65,35 @@ cleanSARSData <- function() {
 #' 
 #' Imports data from public github repo on SARS cases by date and location,
 #'   reformats and cleans the data, and merges with population and latitude-longitude data
+#'   
+#' @param from_web defaults to FALSE: whether to import from the web or from the package
 #' 
-#' @return Output is dataframe with columns for ... 
+#' @return Output is a dataframe with columns for disease (sars),
+#' region (country), value, value_type, pop_2016, lat (latitude), long (longitude)
 #' 
 #' @importFrom magrittr %>%
-#' @importFrom dplyr left_join select
+#' @importFrom dplyr left_join select rename filter
 #' 
 #' @examples
 #' importSARSData()
 #'
 #' @export
 #' 
-importSARSData <- function() {
+importSARSData <- function(from_web = F) {
+  if (!from_web) {
+    data("sars_data", envir = environment())
+    return (sars_data)
+  }
   pop_map <- buildPopulationMap() %>%
     dplyr::select(sars_name, pop_2003)
   coord_map <- buildCoordinateMap() %>%
-    dplyr::select(sars_name, latitude, longitude)
+    dplyr::select(sars_name, latitude, longitude) %>%
+    dplyr::rename("lat" = "latitude", "long" = "longitude")
   sars_data <- cleanSARSData() %>%
     dplyr::left_join(pop_map, by = c("region" = "sars_name")) %>%
-    dplyr::left_join(coord_map, by = c("region" = "sars_name"))
-  # TODO: should we input 0 for NA values in column "value"?
-  # TODO: should we get rid of region %in% c("Total", "Number of deaths")
+    dplyr::left_join(coord_map, by = c("region" = "sars_name")) %>%
+    dplyr::filter(!(region %in% c("Total", "Number of deaths")))
+  sars_data$value[is.na(sars_data$value)] <- 0
   return (sars_data)
 }
-
-# TODO: 
-# after building a version of the SARS data, saving this in data dir,
-# add argument specifying where you want to get SARS data from (ie from web or from package)
-
 

@@ -16,8 +16,8 @@
 #' @export
 #'   
 buildCoordinateMap <- function() {
-  covid_data <- importCovidData()
-  zika_data <- importZikaData()
+  covid_data <- accumulateCovidData()
+  zika_data <- cleanZikaData()
   sars_data <- cleanSARSData()
   country_data <- importCoordinateData()
   
@@ -80,8 +80,6 @@ buildCoordinateMap <- function() {
 #' @importFrom tidyselect everything
 #'
 #' @examples 
-#'   data(pop_data_raw)
-#'   buildPopulationMap(pop_data_raw)
 #' 
 #' @export
 #'   

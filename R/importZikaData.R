@@ -192,27 +192,30 @@ cleanZikaData <- function() {
 #' Imports data from public github repo on Zika cases by date and location,
 #'   reformats, cleans, and merges with population and latitude-longitude data
 #'
-#' @return Output is a dataframe with columns for ...
+#' @param from_web defaults to FALSE: whether to import from the web or from the package
+#' 
+#' @return Output is a dataframe with columns for disease (zika), province (location specific), 
+#' region (location general), value, value_type, pop_2016, lat (latitude), long (longitude)
 #' 
 #' @importFrom magrittr %>%
-#' @importFrom dplyr left_join select
+#' @importFrom dplyr left_join select rename
 #' 
 #' @examples 
-#' importZikaData()
 #' 
 #' @export
 #' 
-importZikaData <- function() {
+importZikaData <- function(from_web = F) {
+  if (!from_web) {
+    data("sars_data", envir = environment())
+    return (sars_data)
+  }
   pop_map <- buildPopulationMap() %>%
     dplyr::select(zika_name, pop_2016)
   coord_map <- buildCoordinateMap() %>%
-    dplyr::select(zika_name, latitude, longitude)
+    dplyr::select(zika_name, latitude, longitude) %>%
+    dplyr::rename("lat" = "latitude", "long" = "longitude")
   zika_data <- cleanZikaData() %>%
     dplyr::left_join(pop_map, by = c("region" = "zika_name")) %>%
     dplyr::left_join(coord_map, by = c("region" = "zika_name"))
   return (zika_data)
 }
-
-# TODO: 
-# after building a version of the Zika data, saving this in data dir,
-# add argument specifying where you want to get Zika data from (ie from web or from package)

@@ -106,25 +106,28 @@ accumulateCovidData <- function() {
 #' Imports data from public github repo on Covid cases by date and location 
 #'   (with latitude and longitude), reformats, cleans, and merges with population data
 #'
-#' @return Output is a dataframe with columns for ...
+#' @param from_web defaults to TRUE: whether to import from the web or from the package
+#'
+#' @return Output is a dataframe with columns for disease (covid), province (location specific), 
+#' region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
 #' 
 #' @importFrom magrittr %>%
 #' @importFrom dplyr left_join select
 #' 
 #' @examples 
-#' importZikaData()
+#' importZikaData(from_web = )
 #' 
 #' @export
 #' 
-importZikaData <- function() {
+importCovidData <- function(from_web = T) {
+  if (!from_web) {
+    data("covid_data", envir = environment())
+    return (covid_data)
+  }
   pop_map <- buildPopulationMap() %>%
     dplyr::select(covid_name, pop_2018)
   covid_data <- accumulateCovidData() %>%
     dplyr::left_join(pop_map, by = c("region" = "covid_name"))
   return (covid_data)
 }
-
-# TODO: 
-# after building a version of the Covid data, saving this in data dir,
-# add argument specifying where you want to get Covid data from (ie from web or from package)
 

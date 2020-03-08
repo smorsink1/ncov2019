@@ -115,7 +115,7 @@ accumulateCovidData <- function() {
 #' @importFrom dplyr left_join select
 #' 
 #' @examples 
-#' importZikaData(from_web = )
+#' importCovidData(from_web = )
 #' 
 #' @export
 #' 

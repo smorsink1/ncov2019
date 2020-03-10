@@ -206,8 +206,8 @@ cleanZikaData <- function() {
 #' 
 importZikaData <- function(from_web = F) {
   if (!from_web) {
-    data("sars_data", envir = environment())
-    return (sars_data)
+    data("zika_data", envir = environment())
+    return (zika_data)
   }
   pop_map <- buildPopulationMap() %>%
     dplyr::select(zika_name, pop_2016)

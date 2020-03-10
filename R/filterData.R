@@ -8,6 +8,7 @@
 #' Value Type - options are "cases", "deaths", and "recoveries", defaults to include all three
 #' Value - option to input minimum/maximum values
 #' 
+#' @param data A data frame to be filtered (optional input)
 #' @param disease The disease corresponding to the data that is to be filtered. 
 #' The options are Coronavirus ("covid"), SARS ("sars"), and Zika ("zika"), and it 
 #' defaults to Coronavirus if there is no input.
@@ -21,6 +22,8 @@
 #' three if no input is given.
 #' @param min_value The minimum value that is to be included in the returned data frame.
 #' @param max_value The maximum value that is to be included in the returned data frame.
+#' @param include_suspected Only applicable if disease = "zika". Boolean that determines whether suspected
+#' cases should be included in cases. Default is FALSE.
 #' 
 #' @return Output is the chosen data frame filtered to the chosen specifications.
 #' 
@@ -37,7 +40,7 @@
 #'
 filterDiseaseData <- function(data = NA, disease = c("covid", "sars", "zika"), first_date = NA, last_date = NA, 
                   country = c(), province = c(), type = c("cases", "deaths", "recoveries"),
-                  min_value = 0, max_value = Inf) {
+                  min_value = 0, max_value = Inf, include_suspected = FALSE) {
   
   if(!is.na(data)) {
     df = data
@@ -45,12 +48,18 @@ filterDiseaseData <- function(data = NA, disease = c("covid", "sars", "zika"), f
   
   disease = match.arg(disease)
   
-  if(disease == "covid") {
+  if(disease == "covid" & is.na(data)) {
     df = importCovidData()
-  } else if(disease == "sars") {
+  } else if(disease == "sars" & is.na(data)) {
     df = importSARSData()
-  } else if(disease == "zika") {
+  } else if(disease == "zika" & is.na(data)) {
     df = importZikaData()
+    if(include_suspected) {
+      df$value_type = "cases"
+    } else {
+      df = df %>% dplyr::filter(value_type == "cumulative_confirmed_cases")
+      df$value_type = "cases"
+    }
   }
   
   if(is.na(first_date)) {

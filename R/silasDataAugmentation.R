@@ -98,7 +98,9 @@ buildPopulationMap <- function() {
   covid_map$region_name[is.na(covid_joined$country_code)] <- NA
   covid_map$region_name[covid_map$covid_name == "Mainland China"] <- "China"
   covid_map$region_name[covid_map$covid_name == "South Korea"] <- "Korea, Rep."
+  covid_map$region_name[covid_map$covid_name == "Korea, South"] <- "Korea, Rep."
   covid_map$region_name[covid_map$covid_name == "Taiwan"] <- "Taiwan"
+  covid_map$region_name[covid_map$covid_name == "Taiwan*"] <- "Taiwan"
   #### no Taiwan in the population data
   covid_map$region_name[covid_map$covid_name == "US"] <- "United States"
   covid_map$region_name[covid_map$covid_name == "Macau"] <- "Macao SAR, China"
@@ -107,6 +109,8 @@ buildPopulationMap <- function() {
   covid_map$region_name[covid_map$covid_name == "Russia"] <- "Russian Federation"
   covid_map$region_name[covid_map$covid_name == "Egypt"] <- "Egypt, Arab Rep."
   covid_map$region_name[covid_map$covid_name == "Iran"] <- "Iran, Islamic Rep."
+  covid_map$region_name[covid_map$covid_name == "Brunei"] <- "Brunei Darussalam"
+  covid_map$region_name[covid_map$covid_name == "Czechia"] <- "Czech Republic"
   
   # Zika
   zika_countries <- unique(zika_data$region)

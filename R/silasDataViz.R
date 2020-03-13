@@ -67,12 +67,22 @@ plotTimeSeries(data, plot_what) {
         ylab(new_col_name)
   }
   
-  
-  
-  # cases, recoveries, deaths, recovered/cases, dead/cases, new cases,
-  #          : new cases/new cases yesterday, 
+  # New cases/deaths plots
+  if (plot_what %in% c("new_cases")) {
+    value_type_col <- strsplit(plot_what, split = "_")[[1]][2]
+    getNew <- function(vec) return (c(vec[1], diff(vec)))
+    p <- data_grouped %>%
+      tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
+      dplyr::mutate(value_raw = .data[[value_type_col]]) %>%
+      dplyr::mutate(value_diff = getNew(.data$value_raw))
+  }
   
 }
+
+
+
+
+
 
 #' Map Plot
 #' 

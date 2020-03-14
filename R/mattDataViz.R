@@ -68,3 +68,13 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
   
   return(map)
 }
+
+mapPlotAnimate <- function(data, first_date = NA, last_date = NA, color = 'red', alpha = 0.5) {
+  
+}
+
+
+
+
+
+

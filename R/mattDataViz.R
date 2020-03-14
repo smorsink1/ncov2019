@@ -54,14 +54,15 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     }
   }
   
-  data = data %>% filter(value > 0)
+  data = data %>% 
+    dplyr::filter(value > 0)
   
   world <- ggplot2::ggplot() +
     ggplot2::borders("world", colour = "gray85", fill = "gray80") +
     ggthemes::theme_map()
   
   map <- world + 
-    ggplot2::geom_point(aes(x = long, y = lat, size = value),
+    ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
                data = data, 
                colour = color, alpha = alpha)
   

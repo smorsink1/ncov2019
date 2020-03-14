@@ -65,19 +65,44 @@ plotTimeSeries(data, plot_what) {
       ggplot() +
         geom_line(aes(x = date, y = value)) +
         ylab(new_col_name)
+    return (p)
   }
   
   # New cases/deaths plots
   if (plot_what %in% c("new_cases")) {
     value_type_col <- strsplit(plot_what, split = "_")[[1]][2]
-    getNew <- function(vec) return (c(vec[1], diff(vec)))
+    getDiffs <- function(vec) return (c(vec[1], diff(vec)))
+    getDiffsCol <- function(data, col_name) {
+      column <- data[[col_name]]
+      getNew(column)
+    }
     p <- data_grouped %>%
       tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
-      dplyr::mutate(value_raw = .data[[value_type_col]]) %>%
-      dplyr::mutate(value_diff = getNew(.data$value_raw))
+      dplyr::ungroup() %>%
+      dplyr::mutate(value = getDiffsCol(.data, value_type_col)) %>%
+      ggplot() +
+        geom_line(aes(x = date, y = value))
   }
   
 }
+
+
+library(tidyverse)
+
+df <- tibble::tibble(col1 = c(10, 20, 30),
+                     col2 = c(1, 2, 3))
+
+getNew <- function(v) c(v[1], diff(v))
+getNew2 <- function(data, col_name) {
+  column <- data[[col_name]]
+  getNew(column)
+}
+new_col_name <- "diffs"
+col <- "col2"
+df %>%
+  dplyr::mutate(!!new_col_name := getNew2(.data, col)) 
+
+
 
 
 

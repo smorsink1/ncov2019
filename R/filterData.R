@@ -5,7 +5,7 @@
 #' Date - option to input first/last date
 #' Region - Country/ies of interest
 #' Province - Province(s) of interest within the country/ies of interest
-#' Value Type - options are "cases", "deaths", and "recoveries", defaults to include all three
+#' Value Type - options are "cases", "deaths", and "recovered", defaults to include all three
 #' Value - option to input minimum/maximum values
 #' 
 #' @param data A data frame to be filtered (optional input)
@@ -18,7 +18,7 @@
 #' @param province A vector of provinces within the countries included in the regions vector
 #' whose observations are to be included in the returned data frame.
 #' @param type A vector of value types whose obbservations are to be included in the returned
-#' data frame. The options are "cases", "deaths", and "recoveries", and it defaults to include all
+#' data frame. The options are "cases", "deaths", and "recovered", and it defaults to include all
 #' three if no input is given.
 #' @param min_value The minimum value that is to be included in the returned data frame.
 #' @param max_value The maximum value that is to be included in the returned data frame.
@@ -39,7 +39,7 @@
 #' @export
 #'
 filterDiseaseData <- function(data = NA, disease = c("covid", "sars", "zika"), first_date = NA, last_date = NA, 
-                  country = c(), province = c(), type = c("cases", "deaths", "recoveries"),
+                  country = c(), province = c(), type = c("cases", "deaths", "recovered"),
                   min_value = 0, max_value = Inf, include_suspected = FALSE) {
   
   if(!is.na(data)) {

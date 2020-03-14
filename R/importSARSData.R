@@ -26,7 +26,7 @@ scrapeSARSData <- function() {
 #'   does NOT include population data or latitude/longitude data
 #' 
 #' @return Output is a dataframe with columns for date (Date), region (character),
-#'   value_type (character; either "cases", "deaths", or "recoveries"), and value (int)
+#'   value_type (character; either "cases", "deaths", or "recovered"), and value (int)
 #'   
 #' @importFrom magrittr %>%
 #' @importFrom tidyr gather
@@ -43,8 +43,8 @@ cleanSARSData <- function() {
     dplyr::rename(region = Country, 
                   cases = `Cumulative number of cases`,
                   deaths = Number_of_deaths,
-                  recoveries = `Number recovered`) %>%
-    tidyr::gather(cases, deaths, recoveries, key = "value_type", value = "value") %>%
+                  recovered = `Number recovered`) %>%
+    tidyr::gather(cases, deaths, recovered, key = "value_type", value = "value") %>%
     dplyr::mutate(disease = "sars") %>%
     dplyr::select(disease, region, date, value, value_type) %>%
     dplyr::mutate(value = as.integer(value)) %>%

@@ -1,6 +1,6 @@
-#' Map Plot
+#' Static Map Plot
 #' 
-#' Generates a global map plot of a certain value of data.
+#' Generates a static global map plot of a certain value of data.
 #' 
 #' @param data The data frame that contains the data to be plotted on the world map.
 #' This data frame must contain the following columns: "long" (type "numeric"), 
@@ -21,13 +21,13 @@
 #' @importFrom ggthemes theme_map
 #' 
 #' @examples 
-#' map_plot(importCovidData(), selected_date = "2020-02-19", selected_value_type = "cases", alpha = 0.3)
-#' map_plot(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple"))
+#' mapPlotStatic(importCovidData(), selected_date = "2020-02-19", selected_value_type = "cases", alpha = 0.3)
+#' mapPlotStatic(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple"))
 #' 
 #' @export
 #'
 
-map_plot <- function(data, selected_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5) {
+mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5) {
   if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
     stop('\"long\" column is either missing from data or is not of type \"numeric\".')
   }

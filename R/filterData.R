@@ -62,6 +62,34 @@ filterDiseaseData <- function(data = NA, disease = c("covid", "sars", "zika"), f
     }
   }
   
+  if(!is.na(first_date) & !(as.Date(first_date) %in% unique(df$date))) {
+    stop(paste0("First date must be in the data set, which contains dates ", min(unique(df$date)), " to ", max(unique(df$date)), "."))
+  }
+  if(!is.na(last_date) & !(as.Date(last_date) %in% unique(df$date))) {
+    stop(paste0("Last date must be in the data set, which contains dates ", min(unique(df$date)), " to ", max(unique(df$date)), "."))
+  }
+  if(!is.na(first_date) & !is.na(last_date) & as.Date(first_date) > as.Date(last_date)) {
+    stop("First date cannot be later than last date.")
+  }
+  
+  if(length(country) > 0 && !(country %in% df$region)){
+    i = !(country %in% df$region)
+    warning(paste0('The country \"', country[i], '\" was not found in the data set. \n'))
+  }
+  
+  if(length(province) > 0 && !(province %in% df$province)){
+    i = !(province %in% df$province)
+    warning(paste0('The province \"', province[i], '\" was not found in the data set. \n'))
+  }
+  
+  if(!(is.numeric(min_value) & is.numeric(max_value) & min_value >= 0 & max_value >= 0)) {
+    stop("Minimum value and maximum value must be positive numeric values.")
+  }
+  
+  if(min_value > max_value) {
+    stop("Minimum value must be less than maximum value.")
+  }
+    
   if(is.na(first_date)) {
     first_date = min(df$date, na.rm = TRUE)
   }

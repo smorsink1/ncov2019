@@ -17,7 +17,7 @@
 #' latitude and longitude data. 
 #' 
 #' @importFrom dplyr filter
-#' @importFrom ggplot2 ggplot borders geom_point
+#' @importFrom ggplot2 ggplot borders geom_point aes
 #' @importFrom ggthemes theme_map
 #' 
 #' @examples 
@@ -64,13 +64,47 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
   map <- world + 
     ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
                data = data, 
-               colour = color, alpha = alpha)
+               colour = color, alpha = alpha) + 
+    ggplot2::labs(title = "Date: {selected_date}")
   
   return(map)
 }
 
+
+
+
+
+
+
+
+install.packages("gifski")
+
+
 mapPlotAnimate <- function(data, first_date = NA, last_date = NA, color = 'red', alpha = 0.5) {
+  data = importCovidData()
+  color = "red"
+  alpha = 0.5
   
+  data = data %>% 
+    dplyr::filter(value > 0) %>%
+    dplyr::filter(value_type == "cases")
+  
+  world <- ggplot2::ggplot() +
+    ggplot2::borders("world", colour = "gray85", fill = "gray80") +
+    ggthemes::theme_map()
+  
+  map <- world + 
+    ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
+                        data = data, 
+                        colour = color, alpha = alpha) +
+    gganimate::transition_time(date) +
+    ggplot2::labs(title = "Date: {frame_time}")
+  
+  map
+  
+  #gganimate::animate(map, 
+  #        duration = 300, # = 365 days/yr x 3 years x 0.25 sec/day = 274 seconds
+  #        fps  =  1)
 }
 
 

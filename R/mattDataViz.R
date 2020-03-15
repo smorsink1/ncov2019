@@ -151,7 +151,7 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   #        fps  =  1)
 }
 
-mapPlotAnimate(data = importSARSData())
+mapPlotAnimate(data = importCovidData())
 
 
 

@@ -55,8 +55,7 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     }
   }
   
-  data = data %>% 
-    dplyr::filter(value > 0)
+  data = data %>% dplyr::filter(value > 0)
   
   world <- ggplot2::ggplot() +
     ggplot2::borders("world", colour = "gray85", fill = "gray80") +
@@ -66,7 +65,9 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
                data = data, 
                colour = color, alpha = alpha) + 
-    ggplot2::labs(title = "Date: {selected_date}")
+    ggplot2::labs(title = "Date: {selected_date}") + 
+    ggplot2::labs(title = "Log(10)-Transformed {selected_value_type}") + 
+    scale_size_continuous(range = c(1, 8), breaks = c(250, 500, 750, 1000))
   
   return(map)
 }
@@ -130,7 +131,6 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   
   data = data %>% 
     dplyr::filter(date >= as.Date(first_date) & date <= as.Date(last_date)) %>%
-    dplyr::filter(value > 0) %>%
     dplyr::filter(value_type == selected_value_type)
   
   world <- ggplot2::ggplot() +
@@ -144,15 +144,11 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
     gganimate::transition_time(date) +
     ggplot2::labs(title = "Date: {frame_time}")
   
-  map
+  return(map)
   
   #gganimate::animate(map, 
   #        duration = 300, # = 365 days/yr x 3 years x 0.25 sec/day = 274 seconds
   #        fps  =  1)
 }
 
-mapPlotAnimate(data = importCovidData())
-
-
-
-
+mapPlotAnimate(data = importCovidData(), color = "blue", selected_value_type = "deaths")

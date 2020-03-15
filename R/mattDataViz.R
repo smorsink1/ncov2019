@@ -17,6 +17,7 @@
 #' latitude and longitude data. 
 #' 
 #' @importFrom dplyr filter
+#' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot borders geom_point aes
 #' @importFrom ggthemes theme_map
 #' 
@@ -71,23 +72,66 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 }
 
 
-
-
-
-
-
-
-install.packages("gifski")
-
-
-mapPlotAnimate <- function(data, first_date = NA, last_date = NA, color = 'red', alpha = 0.5) {
-  data = importCovidData()
-  color = "red"
-  alpha = 0.5
+#' Animated Map Plot
+#' 
+#' Generates an animated global map plot of a certain value of data.
+#' 
+#' @param data The data frame that contains the data to be plotted on the world map.
+#' This data frame must contain the following columns: "long" (type "numeric"), 
+#' "lat" (type "numeric"), and "value" (type "numeric").
+#' @param first_date This is the first date shown in the animation.
+#' @param last_date This is the last date shown in the animation.
+#' @param selected_value_type If the data frame contains a column "value_type" with multiple dates,
+#' this parameter must specify a specific data value type to be plotted. Options are "cases", "deaths", 
+#' and "recovered".
+#' @param color Color of points on world map. Default is red.
+#' @param alpha Transparency level of points on world map. Default is 0.5.
+#' 
+#' @return Output is an animated ggplot object which maps the chosen value on a world map using
+#' latitude and longitude data over the range of dates specified. 
+#' 
+#' @importFrom dplyr filter
+#' @importFrom magrittr %>%
+#' @importFrom ggplot2 ggplot borders geom_point aes
+#' @importFrom ggthemes theme_map
+#' @importFrom gifski gifski
+#' @imprtFrom gganimate transition_time animate
+#' 
+#' @examples 
+#' mapPlotAnimate(importCovidData())
+#' mapPlotAnimate(importSARSData())
+#' 
+#' @export
+#'
+mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5) {
+  
+  if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
+    stop('\"long\" column is either missing from data or is not of type \"numeric\".')
+  }
+  if(!("lat" %in% colnames(data)) | !is.numeric(data$lat)) {
+    stop('\"lat\" column is either missing from data or is not of type \"numeric\".')
+  }
+  if(!("value" %in% colnames(data)) | !is.numeric(data$value)) {
+    stop('\"value\" column is either missing from data or is not of type \"numeric\".')
+  }
+  if("date" %in% colnames(data)) {
+    if(is.na(first_date)) {
+      first_date = min(data$date)
+    }
+    if(is.na(last_date)) {
+      last_date = max(data$date)
+    }
+  }
+  if("value_type" %in% colnames(data) & length(unique(data$value_type)) > 1) {
+    if(is.na(selected_value_type)) {
+      selected_value_type = "cases"
+    }
+  }
   
   data = data %>% 
+    dplyr::filter(date >= as.Date(first_date) & date <= as.Date(last_date)) %>%
     dplyr::filter(value > 0) %>%
-    dplyr::filter(value_type == "cases")
+    dplyr::filter(value_type == selected_value_type)
   
   world <- ggplot2::ggplot() +
     ggplot2::borders("world", colour = "gray85", fill = "gray80") +
@@ -107,7 +151,7 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, color = 'red',
   #        fps  =  1)
 }
 
-
+mapPlotAnimate(data = importSARSData())
 
 
 

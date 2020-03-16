@@ -45,6 +45,8 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
       data = data %>%
         dplyr::filter(date == as.Date(selected_date))
     }
+  } else if("date" %in% colnames(data) & length(unique(data$date)) == 1) {
+    selected_date = as.Date(unique(data$date[1]))
   }
   if("value_type" %in% colnames(data) & length(unique(data$value_type)) > 1) {
     if(is.na(selected_value_type)) {
@@ -53,6 +55,8 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
       data = data %>%
         dplyr::filter(value_type == selected_value_type)
     }
+  } else if("value_type" %in% colnames(data) & length(unique(data$value_type)) == 1) {
+    selected_value_type = unique(data$value_type[1])
   }
   
   data = data %>% dplyr::filter(value > 0)
@@ -64,14 +68,18 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
   map <- world + 
     ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
                data = data, 
-               colour = color, alpha = alpha) + 
-    ggplot2::labs(title = "Date: {selected_date}") + 
-    ggplot2::labs(title = "Log(10)-Transformed {selected_value_type}") + 
-    scale_size_continuous(range = c(1, 8), breaks = c(250, 500, 750, 1000))
+               colour = color, alpha = alpha) +
+    ggplot2::labs(title = paste0("Number of ", 
+                                 selected_value_type, 
+                                 " on ", 
+                                 selected_date)) + 
+    scale_size_continuous(name = paste0("Number of ", selected_value_type),
+               range = c(1,6), labels = c(1,10,100,1000,10000,100000))
   
   return(map)
 }
 
+mapPlotStatic(covid, selected_date = "2020-03-04", selected_value_type = "cases")
 
 #' Animated Map Plot
 #' 
@@ -151,4 +159,4 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   #        fps  =  1)
 }
 
-mapPlotAnimate(data = importCovidData(), color = "blue", selected_value_type = "deaths")
+mapPlotAnimate(data = covid, color = "purple", selected_value_type = "cases")

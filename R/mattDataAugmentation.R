@@ -62,7 +62,7 @@ dayOfDiseaseColumn <- function(df) {
   
   first_date = df %>%
     dplyr::filter(value_type == "cases" & value > 0) %>%
-    dplyr::summarize(first_date_df = min(date)) %>%
+    dplyr::summarize(first_date_df = min(unique(date))) %>%
     magrittr::extract2(1)
   
   df = df %>%

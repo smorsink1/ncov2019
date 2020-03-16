@@ -36,17 +36,18 @@ japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
 #' 
 #' @export 
 #' 
-plotTimeSeries <- function(data, plot_what = "default") {
+plotTimeSeries <- function(data, plot_what = "cases") {
   ## TODO: add axis labels, title, and color to the plots 
+  ## TODO: add group arg that is either "province" "region" or "all" group to that
+  ##    ggplot() + geom_point(aes(x = date, y = value, col = province))
+  ## TODO: add option to make x-axis days since first case 
+  
   ## Check the plot_what, make sure data can support that plot
   ## If not, throw an error saying the problem
   isPlotWhatAcceptable <- function(data_arg, plot_what_arg) {
     # returns "" if plot_what argument is acceptable, an informative error if not
     if (!("value_type" %in% names(data_arg))) {
       return ("data must have 'value_type' column")
-    }
-    if (plot_what_arg == "default") {
-      return ("")
     }
     if (grepl("log_", plot_what_arg)) {
       column <- strsplit(plot_what_arg, split = "log_")[[1]][2]
@@ -107,12 +108,6 @@ plotTimeSeries <- function(data, plot_what = "default") {
       dplyr::group_by(date, pop_2018, region, value_type) %>%
       dplyr::summarize(value = sum(value))
     title <- data_grouped$region[1]
-  }
-  
-  if (plot_what == "default") {
-    p <- ggplot(data = data_grouped) +
-      geom_line(aes(x = date, y = value, col = value_type))
-    return (p)
   }
   
   if (plot_what %in% c("cases", "deaths", "recovered")) {

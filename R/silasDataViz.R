@@ -1,9 +1,4 @@
 
-covid_data <- importCovidData()
-us_covid_data <- filterDiseaseData(covid_data, country = "US")
-china_covid_data <- filterDiseaseData(covid_data, country = "China")
-japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
-
 #' Create Time-Series Plots
 #'
 #' Visualize disease statistics on a day-by-day basis
@@ -11,13 +6,22 @@ japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
 #' @param data disease data to plot (usually the output of filterDiseaseData)
 #' @param plot_what options are: "cases", "recovered", "deaths" (plots totals by date),
 #'   "log_cases", "log_recovered", "log_deaths" (plots log of totals by date),
-#'   "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop_2018" (plots the ratio by date),
+#'   "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop" (plots the ratio by date),
 #'   "new_cases", "new_recovered", "new_deaths" (plots change by date) or 
 #'   "growth_factor" (plots new cases divided by new cases on previous date for each date),
 #'   if plot_what is not specified, plots cases, recovered, and deaths by day
+#' @param group options are: "province", "region", or "all" ("all" is the default).
+#'   "province" creates one plot layer for each province in the data,
+#'   "region" creates one plot layer for each region in the data,
+#'   "all" creates one plot layer total
+#' @param x_axis options are "date" ("date" is the default) or "day_of_disease".
+#'   "date" makes the x-axis the calendar date,
+#'   "day_of_disease" makes the x-axis the days since the first case in the group
+#'   (where group is specified in the group argument)
 #'   
 #' @import ggplot2
-#' @importFrom dplyr group_by summarize filter
+#' @importFrom rlang sym
+#' @importFrom dplyr group_by summarize filter distinct pull
 #' @importFrom tidyr pivot_wider
 #' @importFrom magrittr %>%
 #' 
@@ -29,19 +33,24 @@ japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
 #' plotTimeSeries(us_covid_data, plot_what = "log_cases")
 #' plotTimeSeries(us_covid_data, plot_what = "deaths_per_cases")
 #' plotTimeSeries(us_covid_data, plot_what = "recovered_per_cases")
-#' plotTimeSeries(us_covid_data, plot_what = "cases_per_pop_2018")
+#' plotTimeSeries(us_covid_data, plot_what = "cases_per_pop")
 #' plotTimeSeries(us_covid_data, plot_what = "new_cases")
 #' plotTimeSeries(us_covid_data, plot_what = "new_deaths")
 #' plotTimeSeries(us_covid_data, plot_what = "growth_factor")
 #' 
 #' @export 
 #' 
-plotTimeSeries <- function(data, plot_what = "cases") {
+plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "date") {
   ## TODO: add axis labels, title, and color to the plots 
-  ## TODO: add group arg that is either "province" "region" or "all" group to that
-  ##    ggplot() + geom_point(aes(x = date, y = value, col = province))
   ## TODO: add option to make x-axis days since first case 
+  names(data)[grepl("pop", names(data))] <- "pop"
   
+  if (!(group %in% c("all", "province", "region"))) {
+    stop ("'group' argument must be 'all', 'province', or 'region'")
+  }
+  if (!(x_axis %in% c("date", "day_of_disease"))) {
+    stop("'x_axis' argument must be 'date' or 'day_of_disease'")
+  }
   ## Check the plot_what, make sure data can support that plot
   ## If not, throw an error saying the problem
   isPlotWhatAcceptable <- function(data_arg, plot_what_arg) {
@@ -56,8 +65,8 @@ plotTimeSeries <- function(data, plot_what = "cases") {
       }
     } else if (grepl("_per_", plot_what_arg)) {
       columns <- strsplit(plot_what_arg, split = "_per_")[[1]]
-      if (!all(columns %in% c(data_arg$value_type, "pop_2018"))) {
-        return ("must have an element of 'value_type' column of data or 'pop_2018' on either side of '_per_'")
+      if (!all(columns %in% c(data_arg$value_type, "pop"))) {
+        return ("must have an element of 'value_type' column of data or some string containing 'pop' on either side of '_per_'")
       }
     } else if (grepl("new_", plot_what_arg)) {
       value_type_to_diff <- strsplit(plot_what_arg, split = "new_")[[1]][2]
@@ -87,34 +96,48 @@ plotTimeSeries <- function(data, plot_what = "cases") {
     stop (paste0("(check plotTimeSeries documentation): ", error_msg))
   }
   
-  ## if there is more than one province in the data, it groups to region level
-  ## if there is more than one region in the data, it groups to world level
-  if (length(unique(data$province)) > 1 && length(unique(data$region)) > 1) {
-    # world level
+  ## group the data depending on the group argument
+  if (group == "all") {
+    total_pop <- data %>%
+      dplyr::distinct(region, .keep_all = TRUE) %>%
+      dplyr::pull(pop) %>%
+      sum()
     data_grouped <- data %>%
       dplyr::group_by(date, value_type) %>%
-      dplyr::summarize(pop_2018 = 7.5e9, value = sum(value))
-    title <- "World"
-  } else if (length(unique(data$province)) <= 1 && length(unique(data$region)) <= 1) {
+      dplyr::summarize(pop = total_pop, value = sum(value))
+    title <- "All"
+  } else if (group == "province") {
+    if (grepl("pop", plot_what)) {
+      message("population data not available at province level, using region population data")
+    }
     # province level
     data_grouped <- data %>%
-      dplyr::group_by(date, region, province, value_type) %>%
+      dplyr::group_by(date, pop, region, province, value_type) %>%
       dplyr::summarize(value = sum(value))
-    # inform that population stats are not available on a province-level
-    title <- paste0(data_grouped$province[1], ", ", data_grouped$region[1])
+    title <- "Province"
   } else {
     # region level
     data_grouped <- data %>%
-      dplyr::group_by(date, pop_2018, region, value_type) %>%
+      dplyr::group_by(date, pop, region, value_type) %>%
       dplyr::summarize(value = sum(value))
-    title <- data_grouped$region[1]
+    title <- "Region"
+  }
+  
+  if (group == "all") {
+    group <- ""
+  }
+  if (x_axis == "day_of_disease") {
+    data_grouped_upd <- data_grouped %>%
+      dplyr::ungroup() %>%
+      dplyr::group_by(!!rlang::sym(group)) %>%
+      dayOfDiseaseColumn()
   }
   
   if (plot_what %in% c("cases", "deaths", "recovered")) {
     p <- data_grouped %>%
       dplyr::filter(value_type == plot_what) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value))
+        geom_line(aes(x = date, y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
@@ -125,11 +148,11 @@ plotTimeSeries <- function(data, plot_what = "cases") {
       dplyr::filter(value_type == value_type_to_log) %>%
       dplyr::mutate(value = log(value)) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value))
+        geom_line(aes(x = date, y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
-  # for plot_what = deaths / cases, recovered / cases, cases / pop_2018, etc.
+  # for plot_what = deaths / cases, recovered / cases, cases / pop, etc.
   if (grepl("_per_", plot_what)) {
     numerator <- strsplit(plot_what, "_per_")[[1]][1]
     denominator <- strsplit(plot_what, "_per_")[[1]][2]
@@ -138,7 +161,7 @@ plotTimeSeries <- function(data, plot_what = "cases") {
       tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
       dplyr::mutate(value = .data[[numerator]] / .data[[denominator]]) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value)) +
+        geom_line(aes(x = date, y = value, col = !!rlang::sym(group))) +
         ylab(new_col_name)
     return (p)
   }
@@ -154,9 +177,10 @@ plotTimeSeries <- function(data, plot_what = "cases") {
     p <- data_grouped %>%
       tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
       dplyr::ungroup() %>%
+      dplyr::group_by(!!rlang::sym(group)) %>%
       dplyr::mutate(value = getDiffsCol(.data, value_type_col)) %>%
       ggplot() +
-        geom_point(aes(x = date, y = value))
+        geom_point(aes(x = date, y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
@@ -171,25 +195,43 @@ plotTimeSeries <- function(data, plot_what = "cases") {
     p <- data_grouped %>%
       tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
       dplyr::ungroup() %>%
+      dplyr::group_by(!!rlang::sym(group)) %>%
       dplyr::mutate(diffs = getDiffs(cases)) %>%
       dplyr::mutate(value = getPctChange(diffs)) %>%
       ggplot() +
-        geom_point(aes(x = date, y = value))
+        geom_point(aes(x = date, y = value, col = !!rlang::sym(group)))
     return (p)
   }
 }
 
-plotTimeSeries(data = us_covid_data, plot_what = "default")
+covid_data <- importCovidData()
+us_covid_data <- filterDiseaseData(covid_data, country = "US")
+china_covid_data <- filterDiseaseData(covid_data, country = "China")
+japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
+covid_data_america <- importCovidData() %>%
+  dplyr::filter(region %in% c("US", "Mexico", "Canada"))
+
+plotTimeSeries(data = covid_data_america, plot_what = "cases", group = "all", x_axis = "date")
+plotTimeSeries(data = covid_data_america, plot_what = "cases", group = "region", x_axis = "date")
+plotTimeSeries(data = covid_data_america, plot_what = "deaths_per_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "log_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "new_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "growth_factor", group = "all")
+plotTimeSeries(data = covid_data_america, plot_what = "growth_factor")
+
 plotTimeSeries(data = us_covid_data, plot_what = "cases")
-plotTimeSeries(data = us_covid_data, plot_what = "recovered")
+plotTimeSeries(data = us_covid_data, plot_what = "growth_factor") +
+  ylim(0, 2)
 plotTimeSeries(data = us_covid_data, plot_what = "deaths")
 plotTimeSeries(data = china_covid_data, plot_what = "log_cases")
 plotTimeSeries(data = china_covid_data, plot_what = "log_recovered")
 plotTimeSeries(data = china_covid_data, plot_what = "log_deaths")
-plotTimeSeries(data = china_covid_data, plot_what = "cases_per_pop_2018")
+plotTimeSeries(data = china_covid_data, plot_what = "cases_per_pop")
 plotTimeSeries(data = china_covid_data, plot_what = "deaths_per_cases")
-plotTimeSeries(data = china_covid_data, plot_what = "deaths_per_pop_2018")
+plotTimeSeries(data = china_covid_data, plot_what = "deaths_per_pop")
 plotTimeSeries(data = japan_covid_data, plot_what = "new_cases")
 plotTimeSeries(data = japan_covid_data, plot_what = "new_recovered")
 plotTimeSeries(data = japan_covid_data, plot_what = "new_deaths")
-plotTimeSeries(data = japan_covid_data, plot_what = "growth_factor")
+plotTimeSeries(data = japan_covid_data, plot_what = "growth_factor") +
+  ylim(0, 2)

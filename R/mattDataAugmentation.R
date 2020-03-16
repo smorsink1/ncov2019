@@ -41,8 +41,8 @@ importCoordinateData <- function() {
 #' @return Output is the passed-in data frame with the addition of a day_of_disease column.
 #' 
 #' @importFrom lubridate is.Date
-#' @importFrom magrittr %>%
-#' @importFrom dplyr mutate
+#' @importFrom magrittr %>% extract2
+#' @importFrom dplyr filter summarize mutate
 #' 
 #' @examples 
 #' dayOfDiseaseColumn(importSARSData())
@@ -59,8 +59,14 @@ dayOfDiseaseColumn <- function(df) {
   } else if(!lubridate::is.Date(df$date)){
     stop('The \"date\" column must be of class \"Date\"')
   }
+  
+  first_date = df %>%
+    dplyr::filter(value_type == "cases" & value > 0) %>%
+    dplyr::summarize(first_date_df = min(date)) %>%
+    magrittr::extract2(1)
+  
   df = df %>%
-    dplyr::mutate(day_of_disease = 1 + as.integer(date - min(date, na.rm = TRUE)))
+    dplyr::mutate(day_of_disease = 1 + as.integer(date - as.Date(first_date)))
   return(df)
 }
 

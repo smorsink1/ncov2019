@@ -1,17 +1,13 @@
 #' Filter Data Frame
 #' 
 #' Allows for easy filtering of the data by:
-#' Disease - options are Coronavirus ("covid"), SARS ("sars"), and Zika ("zika"), defaults to Coronavirus 
 #' Date - option to input first/last date
 #' Region - Country/ies of interest
 #' Province - Province(s) of interest within the country/ies of interest
 #' Value Type - options are "cases", "deaths", and "recovered", defaults to include all three
 #' Value - option to input minimum/maximum values
 #' 
-#' @param data A data frame to be filtered (optional input)
-#' @param disease The disease corresponding to the data that is to be filtered. 
-#' The options are Coronavirus ("covid"), SARS ("sars"), and Zika ("zika"), and it 
-#' defaults to Coronavirus if there is no input.
+#' @param data A data frame to be filtered.
 #' @param first_date The earliest date that is to be included in the returned data frame.
 #' @param last_date The latest date that is to be included in the returned data frame.
 #' @param country A vector of countries whose observations are to be included in the returned data frame.
@@ -25,7 +21,7 @@
 #' @param include_suspected Only applicable if disease = "zika". Boolean that determines whether suspected
 #' cases should be included in cases. Default is FALSE.
 #' 
-#' @return Output is the chosen data frame filtered to the chosen specifications.
+#' @return Output is the passed-in data frame filtered to the chosen specifications.
 #' 
 #' @importFrom lubridate is.Date
 #' @importFrom magrittr %>%
@@ -41,6 +37,7 @@
 filterDiseaseData <- function(data, first_date = NA, last_date = NA, 
                   country = c(), province = c(), type = c("cases", "deaths", "recovered"),
                   min_value = 0, max_value = Inf, include_suspected = FALSE) {
+  
   
   if("cumulative_confirmed_cases" %in% data$value_type | 
      "cumulative_suspected_cases" %in% data$value_type) {

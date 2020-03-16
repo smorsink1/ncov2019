@@ -18,7 +18,7 @@
 #' 
 #' @importFrom dplyr filter
 #' @importFrom magrittr %>%
-#' @importFrom ggplot2 ggplot borders geom_point aes
+#' @importFrom ggplot2 ggplot borders geom_point aes labs scale_size_continuous
 #' @importFrom ggthemes theme_map
 #' 
 #' @examples 
@@ -66,20 +66,20 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     ggthemes::theme_map()
   
   map <- world + 
-    ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
+    ggplot2::geom_point(ggplot2::aes(x = long, y = lat, size = log10(value)),
                data = data, 
                colour = color, alpha = alpha) +
     ggplot2::labs(title = paste0("Number of ", 
                                  selected_value_type, 
                                  " on ", 
                                  selected_date)) + 
-    scale_size_continuous(name = paste0("Number of ", selected_value_type),
+    ggplot2::scale_size_continuous(name = paste0("Number of ", selected_value_type),
                range = c(1,6), labels = c(1,10,100,1000,10000,100000))
   
   return(map)
 }
 
-mapPlotStatic(covid, selected_date = "2020-03-04", selected_value_type = "cases")
+mapPlotStatic(covid, selected_date = "2020-03-09", selected_value_type = "cases")
 
 #' Animated Map Plot
 #' 
@@ -95,13 +95,14 @@ mapPlotStatic(covid, selected_date = "2020-03-04", selected_value_type = "cases"
 #' and "recovered".
 #' @param color Color of points on world map. Default is red.
 #' @param alpha Transparency level of points on world map. Default is 0.5.
+#' @param dps Number of dates displayed per second for the animation. Default is 5.
 #' 
 #' @return Output is an animated ggplot object which maps the chosen value on a world map using
 #' latitude and longitude data over the range of dates specified. 
 #' 
 #' @importFrom dplyr filter
 #' @importFrom magrittr %>%
-#' @importFrom ggplot2 ggplot borders geom_point aes
+#' @importFrom ggplot2 ggplot borders geom_point aes labs scale_size_continuous
 #' @importFrom ggthemes theme_map
 #' @importFrom gifski gifski
 #' @imprtFrom gganimate transition_time animate
@@ -112,7 +113,7 @@ mapPlotStatic(covid, selected_date = "2020-03-04", selected_value_type = "cases"
 #' 
 #' @export
 #'
-mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5) {
+mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5, dps = 5) {
   
   if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
     stop('\"long\" column is either missing from data or is not of type \"numeric\".')
@@ -123,11 +124,11 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   if(!("value" %in% colnames(data)) | !is.numeric(data$value)) {
     stop('\"value\" column is either missing from data or is not of type \"numeric\".')
   }
-  if("date" %in% colnames(data)) {
+  if(is.na(first_date) & "date" %in% colnames(data)) {
     if(is.na(first_date)) {
       first_date = min(data$date)
     }
-    if(is.na(last_date)) {
+    if(is.na(last_date) & "date" %in% colnames(data)) {
       last_date = max(data$date)
     }
   }
@@ -146,17 +147,16 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
     ggthemes::theme_map()
   
   map <- world + 
-    ggplot2::geom_point(aes(x = long, y = lat, size = log10(value)),
+    ggplot2::geom_point(ggplot2::aes(x = long, y = lat, size = log10(value)),
                         data = data, 
                         colour = color, alpha = alpha) +
     gganimate::transition_time(date) +
-    ggplot2::labs(title = "Date: {frame_time}")
+    ggplot2::labs(title = "Date: {frame_time}") + 
+    ggplot2::scale_size_continuous(name = paste0("Number of ", selected_value_type),
+                          range = c(1,6), labels = c(1,10,100,1000,10000,100000))
   
-  return(map)
-  
-  #gganimate::animate(map, 
-  #        duration = 300, # = 365 days/yr x 3 years x 0.25 sec/day = 274 seconds
-  #        fps  =  1)
+  gganimate::animate(map, fps = (dps*2))
 }
 
-mapPlotAnimate(data = covid, color = "purple", selected_value_type = "cases")
+mapPlotAnimate(data = covid, first_date = "2020-03-01", 
+               last_date = "2020-03-14", selected_value_type = "cases")

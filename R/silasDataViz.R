@@ -222,7 +222,7 @@ covid_data_america <- importCovidData() %>%
 zika_data <- importZikaData()
 zika_data_subset <- filterDiseaseData(zika_data, country = "Colombia", include_suspected = T) %>%
   dplyr::bind_rows(filterDiseaseData(zika_data, country = "El_Salvador", include_suspected = T))
-sars_data <- importSARSData()  
+sars_data <- importSARSData()
 sars_data_subset <- filterDiseaseData(sars_data, country = "Singapore") %>%
   dplyr::bind_rows(filterDiseaseData(sars_data, country = "China"))
 

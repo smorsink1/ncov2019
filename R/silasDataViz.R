@@ -42,17 +42,14 @@
 #' @export 
 #' 
 plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "date") {
-  ## TODO: add axis labels, title, and color to the plots 
   names(data)[grepl("pop", names(data))] <- "pop"
-  
   if (!(group %in% c("all", "province", "region"))) {
     stop ("'group' argument must be 'all', 'province', or 'region'")
   }
   if (!(x_axis %in% c("date", "day_of_disease"))) {
     stop("'x_axis' argument must be 'date' or 'day_of_disease'")
   }
-  ## Check the plot_what, make sure data can support that plot
-  ## If not, throw an error saying the problem
+  # Check the plot_what, make sure data can support that plot
   isPlotWhatAcceptable <- function(data_arg, plot_what_arg) {
     # returns "" if plot_what argument is acceptable, an informative error if not
     if (!("value_type" %in% names(data_arg))) {
@@ -95,7 +92,6 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
   if (error_msg != "") {
     stop (paste0("(check plotTimeSeries documentation): ", error_msg))
   }
-  
   ## group the data depending on the group argument
   if (group == "all") {
     total_pop <- data %>%
@@ -122,7 +118,6 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::summarize(value = sum(value))
     title <- "Region"
   }
-  
   if (x_axis == "day_of_disease") {
     if (group == "all") {
       data_grouped <- data_grouped %>%
@@ -137,16 +132,16 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
         dplyr::filter(day_of_disease >= 1)
     }
   }
-  
   if (group == "all") {
     group <- ""
   }
-  
   if (plot_what %in% c("cases", "deaths", "recovered")) {
     p <- data_grouped %>%
       dplyr::filter(value_type == plot_what) %>%
       ggplot() +
-        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
+        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
+        xlab(x_axis) + ylab(plot_what) + 
+        ggtitle(paste0("By ", title, ": ", plot_what))
     return (p)
   }
   
@@ -157,7 +152,9 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::filter(value_type == value_type_to_log) %>%
       dplyr::mutate(value = log(value)) %>%
       ggplot() +
-        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
+        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
+        xlab(x_axis) + ylab(plot_what) + 
+        ggtitle(paste0("By ", title, ": ", plot_what))
     return (p)
   }
   
@@ -171,7 +168,8 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::mutate(value = .data[[numerator]] / .data[[denominator]]) %>%
       ggplot() +
         geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
-        ylab(new_col_name)
+        xlab(x_axis) + ylab(new_col_name) + 
+        ggtitle(paste0("By ", title, ": ", new_col_name))
     return (p)
   }
   
@@ -189,7 +187,9 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::group_by(!!rlang::sym(group)) %>%
       dplyr::mutate(value = getDiffsCol(.data, value_type_col)) %>%
       ggplot() +
-        geom_point(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
+        geom_point(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
+        xlab(x_axis) + ylab(plot_what) + 
+        ggtitle(paste0("By ", title, ": ", plot_what))
     return (p)
   }
   
@@ -209,7 +209,8 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::mutate(value = getPctChange(diffs)) %>%
       ggplot() +
         geom_point(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
-        ylim(0, 2)
+        ylim(0, 2) + xlab(x_axis) + ylab(plot_what) +
+        ggtitle(paste0("By ", title, ": ", plot_what))
     return (p)
   }
 }

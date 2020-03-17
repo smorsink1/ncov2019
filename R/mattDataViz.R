@@ -59,7 +59,10 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     selected_value_type = unique(data$value_type[1])
   }
   
-  data = data %>% dplyr::filter(value > 0)
+  data = data %>% 
+    dplyr::group_by(date, lat, long) %>%
+    dplyr::summarise(value = sum(value)) %>%
+    dplyr::filter(value > 0)
   
   world <- ggplot2::ggplot() +
     ggplot2::borders("world", colour = "gray85", fill = "gray80") +
@@ -74,7 +77,8 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
                                  " on ", 
                                  selected_date)) + 
     ggplot2::scale_size_continuous(name = paste0("Number of ", selected_value_type),
-               range = c(1,6), labels = c(1,10,100,1000,10000,100000))
+               range = c(1,6), breaks = c(0,1,2,3,4,5), 
+               labels = c(1,10,100,1000,10000,100000))
   
   return(map)
 }
@@ -100,7 +104,7 @@ mapPlotStatic(covid, selected_date = "2020-03-09", selected_value_type = "cases"
 #' @return Output is an animated ggplot object which maps the chosen value on a world map using
 #' latitude and longitude data over the range of dates specified. 
 #' 
-#' @importFrom dplyr filter
+#' @importFrom dplyr filter group_by summarise
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot borders geom_point aes labs scale_size_continuous
 #' @importFrom ggthemes theme_map
@@ -140,7 +144,9 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   
   data = data %>% 
     dplyr::filter(date >= as.Date(first_date) & date <= as.Date(last_date)) %>%
-    dplyr::filter(value_type == selected_value_type)
+    dplyr::filter(value_type == selected_value_type) %>%
+    dplyr::group_by(date, lat, long) %>%
+    dplyr::summarise(value = sum(value))
   
   world <- ggplot2::ggplot() +
     ggplot2::borders("world", colour = "gray85", fill = "gray80") +
@@ -153,10 +159,11 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
     gganimate::transition_time(date) +
     ggplot2::labs(title = "Date: {frame_time}") + 
     ggplot2::scale_size_continuous(name = paste0("Number of ", selected_value_type),
-                          range = c(1,6), labels = c(1,10,100,1000,10000,100000))
+                          range = c(1,6), breaks = c(0,1,2,3,4,5), 
+                          labels = c(1,10,100,1000,10000,100000))
   
   gganimate::animate(map, fps = (dps*2))
 }
 
-mapPlotAnimate(data = covid, first_date = "2020-03-01", 
-               last_date = "2020-03-14", selected_value_type = "cases")
+mapPlotAnimate(data = covid, selected_value_type = "cases", color = "purple")
+

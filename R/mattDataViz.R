@@ -165,5 +165,5 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   gganimate::animate(map, fps = (dps*2))
 }
 
-mapPlotAnimate(data = covid, selected_value_type = "cases", color = "purple")
+mapPlotAnimate(data = zika_confirmed, selected_value_type = "cases", color = "purple")
 

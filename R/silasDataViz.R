@@ -21,9 +21,10 @@
 #'   
 #' @import ggplot2
 #' @importFrom rlang sym
-#' @importFrom dplyr group_by summarize filter distinct pull
+#' @importFrom dplyr group_by summarize filter distinct pull ungroup
 #' @importFrom tidyr pivot_wider
 #' @importFrom magrittr %>%
+#' @importFrom purrr map_dfr
 #' 
 #' @examples 
 #' covid_data <- importCovidData()
@@ -42,7 +43,6 @@
 #' 
 plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "date") {
   ## TODO: add axis labels, title, and color to the plots 
-  ## TODO: add option to make x-axis days since first case 
   names(data)[grepl("pop", names(data))] <- "pop"
   
   if (!(group %in% c("all", "province", "region"))) {
@@ -123,21 +123,30 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
     title <- "Region"
   }
   
+  if (x_axis == "day_of_disease") {
+    if (group == "all") {
+      data_grouped <- data_grouped %>%
+        dplyr::ungroup() %>%
+        dayOfDiseaseColumn()
+    } else {
+      # group_by %>% group_modify does not work
+      data_grouped <- data_grouped %>%
+        dplyr::ungroup() %>%
+        split(data_grouped[[group]]) %>%
+        purrr::map_dfr(dayOfDiseaseColumn) %>%
+        dplyr::filter(day_of_disease >= 1)
+    }
+  }
+  
   if (group == "all") {
     group <- ""
-  }
-  if (x_axis == "day_of_disease") {
-    data_grouped_upd <- data_grouped %>%
-      dplyr::ungroup() %>%
-      dplyr::group_by(!!rlang::sym(group)) %>%
-      dayOfDiseaseColumn()
   }
   
   if (plot_what %in% c("cases", "deaths", "recovered")) {
     p <- data_grouped %>%
       dplyr::filter(value_type == plot_what) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value, col = !!rlang::sym(group)))
+        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
@@ -148,7 +157,7 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::filter(value_type == value_type_to_log) %>%
       dplyr::mutate(value = log(value)) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value, col = !!rlang::sym(group)))
+        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
@@ -161,7 +170,7 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       tidyr::pivot_wider(names_from = value_type, values_from = value) %>%
       dplyr::mutate(value = .data[[numerator]] / .data[[denominator]]) %>%
       ggplot() +
-        geom_line(aes(x = date, y = value, col = !!rlang::sym(group))) +
+        geom_line(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
         ylab(new_col_name)
     return (p)
   }
@@ -180,7 +189,7 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::group_by(!!rlang::sym(group)) %>%
       dplyr::mutate(value = getDiffsCol(.data, value_type_col)) %>%
       ggplot() +
-        geom_point(aes(x = date, y = value, col = !!rlang::sym(group)))
+        geom_point(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group)))
     return (p)
   }
   
@@ -199,39 +208,63 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
       dplyr::mutate(diffs = getDiffs(cases)) %>%
       dplyr::mutate(value = getPctChange(diffs)) %>%
       ggplot() +
-        geom_point(aes(x = date, y = value, col = !!rlang::sym(group)))
+        geom_point(aes(x = !!rlang::sym(x_axis), y = value, col = !!rlang::sym(group))) +
+        ylim(0, 2)
     return (p)
   }
 }
 
 covid_data <- importCovidData()
-us_covid_data <- filterDiseaseData(covid_data, country = "US")
-china_covid_data <- filterDiseaseData(covid_data, country = "China")
-japan_covid_data <- filterDiseaseData(covid_data, country = "Japan")
 covid_data_america <- importCovidData() %>%
   dplyr::filter(region %in% c("US", "Mexico", "Canada"))
+zika_data <- importZikaData()
+zika_data_subset <- filterDiseaseData(zika_data, country = "Colombia", include_suspected = T) %>%
+  dplyr::bind_rows(filterDiseaseData(zika_data, country = "El_Salvador", include_suspected = T))
+sars_data <- importSARSData()  
+sars_data_subset <- filterDiseaseData(sars_data, country = "Singapore") %>%
+  dplyr::bind_rows(filterDiseaseData(sars_data, country = "China"))
 
-plotTimeSeries(data = covid_data_america, plot_what = "cases", group = "all", x_axis = "date")
-plotTimeSeries(data = covid_data_america, plot_what = "cases", group = "region", x_axis = "date")
+plotTimeSeries(covid_data_america, plot_what = "cases", group = "all", x_axis = "date")
+plotTimeSeries(covid_data_america, plot_what = "cases", group = "all", x_axis = "day_of_disease")
+plotTimeSeries(data = covid_data_america, plot_what = "deaths", group = "region", x_axis = "date")
+plotTimeSeries(data = covid_data_america, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(data = covid_data_america, plot_what = "deaths_per_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(data = covid_data_america, plot_what = "log_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(data = covid_data_america, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(data = covid_data_america, plot_what = "new_cases", group = "region")
+plotTimeSeries(data = covid_data_america, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(data = covid_data_america, plot_what = "growth_factor", group = "all")
-plotTimeSeries(data = covid_data_america, plot_what = "growth_factor")
+plotTimeSeries(data = covid_data_america, plot_what = "growth_factor", x_axis = "day_of_disease")
 
-plotTimeSeries(data = us_covid_data, plot_what = "cases")
-plotTimeSeries(data = us_covid_data, plot_what = "growth_factor") +
-  ylim(0, 2)
-plotTimeSeries(data = us_covid_data, plot_what = "deaths")
-plotTimeSeries(data = china_covid_data, plot_what = "log_cases")
-plotTimeSeries(data = china_covid_data, plot_what = "log_recovered")
-plotTimeSeries(data = china_covid_data, plot_what = "log_deaths")
-plotTimeSeries(data = china_covid_data, plot_what = "cases_per_pop")
-plotTimeSeries(data = china_covid_data, plot_what = "deaths_per_cases")
-plotTimeSeries(data = china_covid_data, plot_what = "deaths_per_pop")
-plotTimeSeries(data = japan_covid_data, plot_what = "new_cases")
-plotTimeSeries(data = japan_covid_data, plot_what = "new_recovered")
-plotTimeSeries(data = japan_covid_data, plot_what = "new_deaths")
-plotTimeSeries(data = japan_covid_data, plot_what = "growth_factor") +
-  ylim(0, 2)
+plotTimeSeries(zika_data_subset, plot_what = "cases", group = "all", x_axis = "date")
+plotTimeSeries(zika_data_subset, plot_what = "cases", group = "all", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "cases", group = "region", x_axis = "date")
+plotTimeSeries(data = zika_data_subset, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = zika_data_subset, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "log_cases", group = "region")
+plotTimeSeries(data = zika_data_subset, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "new_cases", group = "region")
+plotTimeSeries(data = zika_data_subset, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = zika_data_subset, plot_what = "growth_factor", group = "all")
+plotTimeSeries(data = zika_data_subset, plot_what = "growth_factor", x_axis = "day_of_disease")
+
+plotTimeSeries(sars_data_subset, plot_what = "cases", group = "all", x_axis = "date")
+plotTimeSeries(sars_data_subset, plot_what = "cases", group = "all", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "cases", group = "region", x_axis = "date")
+plotTimeSeries(data = sars_data_subset, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = sars_data_subset, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "log_cases", group = "region")
+plotTimeSeries(data = sars_data_subset, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "cases_per_pop", group = "region")
+plotTimeSeries(data = sars_data_subset, plot_what = "deaths_per_pop", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "new_cases", group = "region")
+plotTimeSeries(data = sars_data_subset, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(data = sars_data_subset, plot_what = "growth_factor", group = "all")
+plotTimeSeries(data = sars_data_subset, plot_what = "growth_factor", x_axis = "day_of_disease")

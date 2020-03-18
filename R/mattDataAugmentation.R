@@ -70,3 +70,55 @@ dayOfDiseaseColumn <- function(df) {
   return(df)
 }
 
+
+
+
+
+
+
+alignDatesWeekly <- function(df) {
+  dts = unique(df$date)
+  first_date = as.Date(min(dts))
+  last_date = (as.Date(max(dts)) + 7)
+  
+  dates_used = seq(first_date, last_date, by = 'weeks')
+  
+  new_df = 
+    unique(df[, c('province', 'region', 'value_type', 'pop_2016', 'lat', 'long')]) %>%
+    dplyr::mutate(disease = "zika") %>%
+    dplyr::slice(rep(1:n(), each = length(dates_used))) %>%
+    dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(df))))
+  
+  value_vec = c()
+  for(i in 1:nrow(new_df)) {
+    prov = new_df[i,"province"][[1]]
+    country = new_df[i,"region"][[1]]
+    value_type = new_df[i,"value_type"][[1]]
+    dt = as.Date(new_df[i,"date"][[1]])
+    narrowed = df %>%
+      dplyr::filter(region == country) %>%
+      dplyr::filter(province == prov) %>%
+      dplyr::filter(value_type == value_type) %>%
+      dplyr::filter(date <= dt) %>%
+      dplyr::filter(date >= (as.Date(dt) - 6))
+    
+    value = 0
+    if(nrow(narrowed) > 0) {
+      value = max(narrowed$value)
+    } else {
+      if(i > 1 && 
+         new_df$province[i - 1] == prov && 
+         new_df$region[i - 1] == country &&
+         new_df$value_type[i - 1] == value_type) {
+        value = value_vec[i - 1]
+      }
+    }
+    value_vec = c(value_vec, value)
+  }
+  new_df %>%
+    dplyr::mutate(value = value_vec) %>%
+    dplyr::select(colnames(df))
+  
+  return(new_df)
+}
+

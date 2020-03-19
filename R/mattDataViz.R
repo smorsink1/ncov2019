@@ -124,11 +124,12 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' @importFrom ggplot2 ggplot borders geom_point aes labs scale_size_continuous
 #' @importFrom ggthemes theme_map
 #' @importFrom gifski gifski
-#' @imprtFrom gganimate transition_time animate
+#' @importFrom gganimate transition_time animate
 #' 
 #' @examples 
 #' mapPlotAnimate(importCovidData())
 #' mapPlotAnimate(importSARSData())
+#' mapPlotAnimate(filterDiseaseData(importZikaData()))
 #' 
 #' @export
 #'

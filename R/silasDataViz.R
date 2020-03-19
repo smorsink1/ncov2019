@@ -122,13 +122,14 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
     if (group == "all") {
       data_grouped <- data_grouped %>%
         dplyr::ungroup() %>%
-        dayOfDiseaseColumn()
+        dayOfDiseaseColumn(threshold = 100) %>%
+        dplyr::filter(day_of_disease >= 1)
     } else {
       # group_by %>% group_modify does not work
       data_grouped <- data_grouped %>%
         dplyr::ungroup() %>%
         split(data_grouped[[group]]) %>%
-        purrr::map_dfr(dayOfDiseaseColumn) %>%
+        purrr::map_dfr(dayOfDiseaseColumn, threshold = 100) %>%
         dplyr::filter(day_of_disease >= 1)
     }
   }

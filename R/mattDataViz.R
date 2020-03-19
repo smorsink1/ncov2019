@@ -12,6 +12,11 @@
 #' and "recovered".
 #' @param color Color of points on world map. Default is red.
 #' @param alpha Transparency level of points on world map. Default is 0.5.
+#' @param congregate Only applies to Zika data. Since Zika data was tracked on a scattered weekly basis,
+#' this determines whether or not the user would like to congreagate the data (TRUE) or just to
+#' see the data tracked on the selected date in the passed-in data frame (FALSE). Note that if congregate is
+#' TRUE, the exact date won't be returned, but rather the closest congregation date prior to the selected date.
+#' Defaults to FALSE. 
 #' 
 #' @return Output is the ggplot object which maps the chosen value on a world map using
 #' latitude and longitude data. 
@@ -24,11 +29,13 @@
 #' @examples 
 #' mapPlotStatic(importCovidData(), selected_date = "2020-02-19", selected_value_type = "cases", alpha = 0.3)
 #' mapPlotStatic(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple"))
+#' mapPlotStatic(filterDiseaseData(importZikaData()), selected_date = "2016-05-03", selected_value_type = "cases", 
+#' color = "purple", congregate = TRUE)
 #' 
 #' @export
 #'
 
-mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5) {
+mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5, congregate = FALSE) {
   if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
     stop('\"long\" column is either missing from data or is not of type \"numeric\".')
   }
@@ -42,6 +49,18 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
     if(is.na(selected_date)) {
       stop('Data contains multiple dates: please select one date as \"selected_date\" argument to be plotted.')
     } else {
+      if(congregate) {
+        data = congregateDataDates(data)
+        dts = unique(data$date)
+        
+        plotted_date = as.Date(selected_date)
+        while(!(plotted_date %in% dts)){
+          plotted_date = plotted_date - 1
+        }
+        
+        selected_date = plotted_date
+        
+      }
       data = data %>%
         dplyr::filter(date == as.Date(selected_date))
     }
@@ -76,14 +95,10 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
                                  selected_value_type, 
                                  " on ", 
                                  selected_date)) + 
-    ggplot2::scale_size_continuous(name = paste0("Number of ", selected_value_type),
-               range = c(1,6), breaks = c(0,1,2,3,4,5), 
-               labels = c(1,10,100,1000,10000,100000))
+    ggplot2::scale_size_continuous(name = paste0("Log10 of ", selected_value_type))
   
   return(map)
 }
-
-mapPlotStatic(covid, selected_date = "2020-03-09", selected_value_type = "cases")
 
 #' Animated Map Plot
 #' 
@@ -144,8 +159,11 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   
   if(unique(data$disease)[1] == "zika") {
     data = congregateDataDates(data, frequency = "weekly")
-  } else if(unique(data$disease)[1] == "sars") {
-    data = congregateDataDates(data, frequency = "daily")
+  }
+  
+  if(unique(data$disease)[1] == "sars") {
+    data = data %>%
+      dplyr::filter(!is.na(region))
   }
   
   data = data %>% 
@@ -170,6 +188,4 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   
   gganimate::animate(map, fps = (dps*2))
 }
-
-mapPlotAnimate(data = zika_confirmed, selected_value_type = "cases", color = "purple")
 

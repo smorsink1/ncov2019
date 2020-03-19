@@ -84,8 +84,6 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' but is beneficial for plotting.
 #' 
 #' @param df a data frame for which the data values will be congregated to weekly dates.
-#' @param frequency how often should the data points be congregated: "weekly" or "daily". 
-#' Default is "weekly".
 #' 
 #' @return Output is a data frame of the same format as the passed-in df, but with congregated dates.
 #' 
@@ -99,7 +97,7 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' @export
 #'
 
-congregateDataDates <- function(df, frequency = "weekly") {
+congregateDataDates <- function(df) {
   
   if(length(unique(df$disease)) != 1 | unique(df$disease)[1] != "zika"){
     stop("This function is only to be used on Zika data.")
@@ -108,14 +106,8 @@ congregateDataDates <- function(df, frequency = "weekly") {
   dts = unique(df$date)
   first_date = as.Date(min(dts))
   last_date = (as.Date(max(dts)) + 7)
-  
-  if(frequency == "weekly") {
-    time = "weeks"
-  } else if(frequency == "daily") {
-    time = "days"
-  }
-  
-  dates_used = seq(first_date, last_date, by = time)
+
+  dates_used = seq(first_date, last_date, by = "weeks")
   
   unique_locations = unique(df[, c('province', 'region', 'value_type', 'pop_2016', 'lat', 'long')])
   

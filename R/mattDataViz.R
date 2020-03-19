@@ -159,7 +159,7 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   }
   
   if(unique(data$disease)[1] == "zika") {
-    data = congregateDataDates(data, frequency = "weekly")
+    data = congregateDataDates(data)
   }
   
   if(unique(data$disease)[1] == "sars") {

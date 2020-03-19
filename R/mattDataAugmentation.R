@@ -1,4 +1,3 @@
-
 #' Imports Coordinate Data
 #' 
 #' Imports country latitude and longitude data from Google public dataset
@@ -33,10 +32,13 @@ importCoordinateData <- function() {
 #' Adding Day of Disease Column
 #' 
 #' Adds a column of the data frame that gives the day of the disease, with day 1
-#' being the first date seen in the passed-in data frame
+#' being the first date seen in the passed-in data frame in which the threshold number
+#' of cases was reached.
 #' 
 #' @param df a data frame for which this day of disease column will be created.
 #' This data frame must contain a column labeled as "date" which is of type "Date"
+#' @param threshold the number of cases required to state the "start" of the disease.
+#' Default is 100, which conforms with epidemiology convention.
 #' 
 #' @return Output is the passed-in data frame with the addition of a day_of_disease column.
 #' 
@@ -51,7 +53,7 @@ importCoordinateData <- function() {
 #' 
 #' @export
 #'
-dayOfDiseaseColumn <- function(df) {
+dayOfDiseaseColumn <- function(df, threshold = 100) {
   if(!is.data.frame(df)){
     stop('Passed-in object must be of class \"data frame\"')
   } else if(!("date" %in% colnames(df))){
@@ -61,7 +63,7 @@ dayOfDiseaseColumn <- function(df) {
   }
   
   first_date = df %>%
-    dplyr::filter(value_type == "cases" & value > 0) %>%
+    dplyr::filter(value_type == "cases" & value >= threshold) %>%
     dplyr::summarize(first_date_df = min(unique(date))) %>%
     magrittr::extract2(1)
   
@@ -72,11 +74,37 @@ dayOfDiseaseColumn <- function(df) {
 
 
 
+#' Congregation of Data Dates
+#' 
+#' Because the Zika data was tracked on different dates in different locations, this function
+#' congregates the value counts over a certain period (taking the maximum if necessary) so that
+#' the dates in the data are aligned for all locations. This function is only to be used on Zika data.
+#' 
+#' WARNING: This function manipulates the data in a way that makes the dates less accurate,
+#' but is beneficial for plotting.
+#' 
+#' @param df a data frame for which the data values will be congregated to weekly dates.
+#' @param frequency how often should the data points be congregated: "weekly" or "daily". 
+#' Default is "weekly".
+#' 
+#' @return Output is a data frame of the same format as the passed-in df, but with congregated dates.
+#' 
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate slice n filter select
+#' 
+#' @examples 
+#' congregateDataDates(importZikaData())
+#' congregateDataDates(filterDiseaseData(importZikaData(), include_suspected = FALSE))
+#' 
+#' @export
+#'
 
-
-
-# Time = 25 seconds for weekly Zika
 congregateDataDates <- function(df, frequency = "weekly") {
+  
+  if(length(unique(df$disease)) != 1 | unique(df$disease)[1] != "zika"){
+    stop("This function is only to be used on Zika data.")
+  }
+  
   dts = unique(df$date)
   first_date = as.Date(min(dts))
   last_date = (as.Date(max(dts)) + 7)
@@ -93,12 +121,12 @@ congregateDataDates <- function(df, frequency = "weekly") {
   
   new_df = unique_locations %>%
     dplyr::mutate(disease = df$disease[1]) %>%
-    dplyr::slice(rep(1:n(), each = length(dates_used))) %>%
+    dplyr::slice(rep(1:(dplyr::n()), each = length(dates_used))) %>%
     dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
   
   value_vec = c()
   for(i in 1:nrow(new_df)) {
-    if(exists(df$province)){
+    if(length(df$province) > 0){
       prov = new_df[i,"province"][[1]]
     }
     country = new_df[i,"region"][[1]]
@@ -110,7 +138,7 @@ congregateDataDates <- function(df, frequency = "weekly") {
       dplyr::filter(date <= dt) %>%
       dplyr::filter(date >= (as.Date(dt) - 6))
     
-    if(exists(prov)) {
+    if(length(df$province) > 0) {
       narrowed = narrowed %>%
         dplyr::filter(province == prov)
     }
@@ -128,12 +156,11 @@ congregateDataDates <- function(df, frequency = "weekly") {
     }
     value_vec = c(value_vec, value)
   }
-  new_df %>%
-    dplyr::select(disease, province, region, date, value_type, pop_2016, lat, long)
   
-  new_df$value = value_vec
-  
+  new_df = new_df %>%
+    dplyr::mutate(value = value_vec) %>%
+    dplyr::select(disease, province, region, date, value, value_type, pop_2016, lat, long)
+
   return(new_df)
 }
 
-x = congregateDataDates(zika_confirmed)

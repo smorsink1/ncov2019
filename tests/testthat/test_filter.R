@@ -4,7 +4,7 @@ test_that("filterDiseaseData works as expected", {
   zika <- importZikaData(from_web = F)
   
   zika_confirmed <- filterDiseaseData(zika)
-  expect_true(nrow(zika[which(value_type == "cumulative_confirmed_cases"), ]) == nrow(zika_confirmed))
+  expect_true(nrow(zika[which(zika$value_type == "cumulative_confirmed_cases"), ]) == nrow(zika_confirmed))
   
   zika_all <- filterDiseaseData(zika, include_suspected = TRUE)
   expect_true(nrow(zika) == nrow(zika_all))

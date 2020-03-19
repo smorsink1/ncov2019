@@ -8,7 +8,7 @@
 #' @name country_coordinates_map
 #' @docType data
 #'   
-#' @format A data frame with 83 rows and 6 columns:
+#' @format A tibble with 83 rows and 6 columns:
 #' \describe{
 #'   \item{country_name}{standard name of the country}
 #'   \item{covid_name}{name of the country in the Covid data}
@@ -29,7 +29,7 @@ NULL
 #' @name country_pop_data_raw
 #' @docType data
 #' 
-#' @format A .csv file with 265 rows and 5 columns
+#' @format A tibble with 265 rows and 5 columns
 #' \describe{
 #'   \item{country_name}
 #'   \item{country_code}
@@ -41,34 +41,71 @@ NULL
 NULL
 
 
-#' Zika Virus Data
-#' 
-#' Description
+#' Coronavirus Data
+#'
+#' A dataset of coronavirus data with rows being location/date/value_type combinations, 
+#'   columns being identifying information and the associated value, updated thru 2020-03-06
 #'   
-#' @format A data frame with 83 rows and 6 columns:
+#' @name covid_data
+#' @docType data
+#' 
+#' @format A tibble with 27405 rows and 9 columns
 #' \describe{
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
+#'   \item{disease} "covid" for all rows
+#'   \item{province} the most granular location identifier
+#'   \item{region} a general location identifier, usually the country
+#'   \item{lat} the latitude of the location
+#'   \item{long} the longitude of the location
+#'   \item{date} the date of the observation
+#'   \item{value} an integer representing the quantity of value_type for that observation
+#'   \item{value_type} either "cases", "deaths", or "recovered"
+#'   \item{pop_2018} region population data for 2018
 #' }
-#' @source \url{url}
-"data"
+#' @source \url{https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv}
+NULL
+
+#' Zika Data
+#'
+#' A dataset of Zika virus data with rows being location/date/value_type combinations, 
+#'   columns being identifying information and the associated value
+#'   
+#' @name zika_data
+#' @docType data
+#' 
+#' @format A tibble with 4228 rows and 9 columns
+#' \describe{
+#'   \item{disease} "zika" for all rows
+#'   \item{province} the most granular location identifier
+#'   \item{region} a general location identifier, usually the country
+#'   \item{date} the date of the observation
+#'   \item{value} an integer representing the quantity of value_type for that observation
+#'   \item{value_type} either "cumulative_confirmed_cases" or "cumulative_suspected_cases"
+#'   \item{pop_2016} region population data for 2016
+#'   \item{lat} the latitude of the region
+#'   \item{long} the longitude of the region
+#' }
+#' @source \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/cdc_zika.csv}
+NULL
 
 #' SARS Data
-#' 
-#' Description
+#'
+#' A dataset of SARS virus data with rows being location/date/value_type combinations, 
+#'   columns being identifying information and the associated value
 #'   
-#' @format A data frame with 83 rows and 6 columns:
+#' @name sars_data
+#' @docType data
+#' 
+#' @format A tibble with 31551 rows and 8 columns
 #' \describe{
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
-#'   \item{col_name}{col_description}
+#'   \item{disease} "sars" for all rows
+#'   \item{region} a general location identifier, usually the country
+#'   \item{date} the date of the observation
+#'   \item{value} an integer representing the quantity of value_type for that observation
+#'   \item{value_type} either "cases", "deaths", or "recovered"
+#'   \item{pop_2003} region population data for 2003
+#'   \item{lat} the latitude of the region
+#'   \item{long} the longitude of the region
 #' }
-#' @source \url{url}
-"data"
+#' @source \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/sars_data.csv}
+NULL
+

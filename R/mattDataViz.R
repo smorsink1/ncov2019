@@ -142,6 +142,12 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
     }
   }
   
+  if(unique(data$disease)[1] == "zika") {
+    data = congregateDataDates(data, frequency = "weekly")
+  } else if(unique(data$disease)[1] == "sars") {
+    data = congregateDataDates(data, frequency = "daily")
+  }
+  
   data = data %>% 
     dplyr::filter(date >= as.Date(first_date) & date <= as.Date(last_date)) %>%
     dplyr::filter(value_type == selected_value_type) %>%

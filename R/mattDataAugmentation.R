@@ -75,32 +75,45 @@ dayOfDiseaseColumn <- function(df) {
 
 
 
-
-alignDatesWeekly <- function(df) {
+# Time = 25 seconds for weekly Zika
+congregateDataDates <- function(df, frequency = "weekly") {
   dts = unique(df$date)
   first_date = as.Date(min(dts))
   last_date = (as.Date(max(dts)) + 7)
   
-  dates_used = seq(first_date, last_date, by = 'weeks')
+  if(frequency == "weekly") {
+    time = "weeks"
+  } else if(frequency == "daily") {
+    time = "days"
+  }
   
-  new_df = 
-    unique(df[, c('province', 'region', 'value_type', 'pop_2016', 'lat', 'long')]) %>%
-    dplyr::mutate(disease = "zika") %>%
+  dates_used = seq(first_date, last_date, by = time)
+  
+  unique_locations = unique(df[, c('province', 'region', 'value_type', 'pop_2016', 'lat', 'long')])
+  
+  new_df = unique_locations %>%
+    dplyr::mutate(disease = df$disease[1]) %>%
     dplyr::slice(rep(1:n(), each = length(dates_used))) %>%
-    dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(df))))
+    dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
   
   value_vec = c()
   for(i in 1:nrow(new_df)) {
-    prov = new_df[i,"province"][[1]]
+    if(exists(df$province)){
+      prov = new_df[i,"province"][[1]]
+    }
     country = new_df[i,"region"][[1]]
     value_type = new_df[i,"value_type"][[1]]
     dt = as.Date(new_df[i,"date"][[1]])
     narrowed = df %>%
       dplyr::filter(region == country) %>%
-      dplyr::filter(province == prov) %>%
       dplyr::filter(value_type == value_type) %>%
       dplyr::filter(date <= dt) %>%
       dplyr::filter(date >= (as.Date(dt) - 6))
+    
+    if(exists(prov)) {
+      narrowed = narrowed %>%
+        dplyr::filter(province == prov)
+    }
     
     value = 0
     if(nrow(narrowed) > 0) {
@@ -116,9 +129,11 @@ alignDatesWeekly <- function(df) {
     value_vec = c(value_vec, value)
   }
   new_df %>%
-    dplyr::mutate(value = value_vec) %>%
-    dplyr::select(colnames(df))
+    dplyr::select(disease, province, region, date, value_type, pop_2016, lat, long)
+  
+  new_df$value = value_vec
   
   return(new_df)
 }
 
+x = congregateDataDates(zika_confirmed)

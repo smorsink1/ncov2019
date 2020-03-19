@@ -65,3 +65,5 @@ importFrom(tidyr,pivot_longer)
 importFrom(tidyr,pivot_wider)
 importFrom(tidyselect,everything)
 importFrom(xml2,read_html)
+importFrom(utils, data)
+

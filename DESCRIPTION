@@ -6,8 +6,9 @@ Authors@R: c(person("Silas", "Morsink", email = "sjm.si.si@gmail.com",
              person("Matthew", "Colon", email = "",
                     role = c("aut")))
 Description: What the package does (one paragraph).
-Depends: R (>= 3.6.2), ggplot2 (>= 3.0.0), dplyr, ggthemes, gifski, lubridate, magrittr, 
-  purrr, readr, rlang, rvest, tibble, tidyr, tidyselect, xml2
+Depends: R (>= 3.6.2)
+Imports: ggplot2 (>= 3.0.0), dplyr, ggthemes, gifski, lubridate, magrittr, 
+purrr, readr, rlang, rvest, tibble, tidyr, tidyselect, xml2
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -2,7 +2,7 @@
 % Please edit documentation in R/importCovidData.R
 \name{scrapeCovidData}
 \alias{scrapeCovidData}
-\title{Downloads Time-Series Coronavirus Data}
+\title{Scrapes Time-Series Coronavirus Data}
 \usage{
 scrapeCovidData(type = "cases")
 }
@@ -13,16 +13,17 @@ or "recovered" for recoveries}
 }
 \value{
 Output is a dataframe with rows representing locations,
-  columns representing dates, values representing the number of people
+  columns representing dates, values representing the number of cases/deaths/recovered
+  for that location/date combination
 }
 \description{
 Imports data from public Johns Hopkins CSSEGISandData github repo on
   day-by-day coronavirus confirmed cases, deaths, and recoveries by location
 }
 \examples{
-importCovidData()
-importCovidData("cases")
-importCovidData("deaths")
-importCovidData("recovered") 
+scrapeCovidData()    # defaults to scrape "cases"
+scrapeCovidData("cases")
+scrapeCovidData("deaths")
+scrapeCovidData("recovered") 
 
 }

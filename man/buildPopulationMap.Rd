@@ -9,12 +9,14 @@ buildPopulationMap()
 \value{
 Output is a dataframe with columns "region_name" 
   (the standard country name of region), "covid_name", "zika_name", "sars_name",
-  "latitude", and "longitude"
+  "pop_2003" (SARS year), "pop_2016" (Zika year), 
+  and "pop_2018" (closest year to Covid for which data is available)
 }
 \description{
 Builds a dataset providing a map between the country names used in the Covid data,
   the Zika data, and the SARS data, and the population associated with each country
 }
 \examples{
+buildPopulationMap()
 
 }

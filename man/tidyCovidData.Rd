@@ -23,5 +23,6 @@ Pivots the data frame to make one row per location/date combo
 \examples{
 tidyCovidData(scrapeCovidData())
 tidyCovidData(scrapeCovidData("cases"))
+tidyCovidData(scrapeCovidData("deaths"))
 
 }

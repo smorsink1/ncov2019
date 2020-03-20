@@ -1,7 +1,4 @@
 
-#' Avoiding known build notes from unquoted tidyverse variables
-#'   (wrongly interpreted as global variables)
-#'
 #' @importFrom utils globalVariables
 
 utils::globalVariables(names = c("disease",                

@@ -10,12 +10,11 @@ plotTimeSeries(data, plot_what = "cases", group = "all",
 \arguments{
 \item{data}{disease data to plot (usually the output of filterDiseaseData)}
 
-\item{plot_what}{options are: "cases", "recovered", "deaths" (plots totals by date),
-"log_cases", "log_recovered", "log_deaths" (plots log of totals by date),
+\item{plot_what}{options are: "cases" (default), "recovered", "deaths" (plots totals by date),
+"log_cases", "log_recovered", "log_deaths" (plots natural log of totals by date),
 "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop" (plots the ratio by date),
 "new_cases", "new_recovered", "new_deaths" (plots change by date) or 
-"growth_factor" (plots new cases divided by new cases on previous date for each date),
-if plot_what is not specified, plots cases, recovered, and deaths by day}
+"growth_factor" (plots new cases divided by new cases on previous date for each date),}
 
 \item{group}{options are: "province", "region", or "all" ("all" is the default).
 "province" creates one plot layer for each province in the data,
@@ -24,7 +23,7 @@ if plot_what is not specified, plots cases, recovered, and deaths by day}
 
 \item{x_axis}{options are "date" ("date" is the default) or "day_of_disease".
 "date" makes the x-axis the calendar date,
-"day_of_disease" makes the x-axis the days since the first case in the group
+"day_of_disease" makes the x-axis the days since the 100th case in the group
 (where group is specified in the group argument)}
 }
 \description{
@@ -33,13 +32,14 @@ Visualize disease statistics on a day-by-day basis
 \examples{
 covid_data <- importCovidData()
 us_covid_data <- filterDiseaseData(covid_data, country = "US")
-plotTimeSeries(us_covid_data)
-plotTimeSeries(us_covid_data, plot_what = "cases")
-plotTimeSeries(us_covid_data, plot_what = "log_cases")
-plotTimeSeries(us_covid_data, plot_what = "deaths_per_cases")
-plotTimeSeries(us_covid_data, plot_what = "recovered_per_cases")
+us_italy_covid_data <- filterDiseaseData(covid_data, country = c("US", "Italy"))
+plotTimeSeries(us_italy_covid_data, region = "all")  # will plot aggregate US & Italy cases
+plotTimeSeries(us_covid_data, plot_what = "cases")   # will plot US cases
+plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region")   # will have one layer for log of US cases, another for log of Italy cases
+plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")   # will have one layer for log of US cases, another for log of Italy cases
 plotTimeSeries(us_covid_data, plot_what = "cases_per_pop")
-plotTimeSeries(us_covid_data, plot_what = "new_cases")
+plotTimeSeries(us_covid_data, plot_what = "deaths_per_pop")
+plotTimeSeries(us_covid_data, plot_what = "pop_per_cases")
 plotTimeSeries(us_covid_data, plot_what = "new_deaths")
 plotTimeSeries(us_covid_data, plot_what = "growth_factor")
 

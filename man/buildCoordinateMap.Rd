@@ -16,3 +16,7 @@ Builds a dataset providing a map between the country names used in the Covid dat
   the Zika data, and the SARS data, and the latitude and longitude associated
   with each country
 }
+\examples{
+buildCoordinateMap()
+
+}

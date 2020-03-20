@@ -6,15 +6,15 @@
 \title{Zika Data}
 \format{A tibble with 4228 rows and 9 columns
 \describe{
-  \item{disease} "zika" for all rows
-  \item{province} the most granular location identifier
-  \item{region} a general location identifier, usually the country
-  \item{date} the date of the observation
-  \item{value} an integer representing the quantity of value_type for that observation
-  \item{value_type} either "cumulative_confirmed_cases" or "cumulative_suspected_cases"
-  \item{pop_2016} region population data for 2016
-  \item{lat} the latitude of the region
-  \item{long} the longitude of the region
+  \item{disease}{"zika" for all rows}
+  \item{province}{the most granular location identifier}
+  \item{region}{a general location identifier, usually the country}
+  \item{date}{the date of the observation}
+  \item{value}{an integer representing the quantity of value_type for that observation}
+  \item{value_type}{either "cumulative_confirmed_cases" or "cumulative_suspected_cases"}
+  \item{pop_2016}{region population data for 2016}
+  \item{lat}{the latitude of the region}
+  \item{long}{the longitude of the region}
 }}
 \source{
 \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/cdc_zika.csv}

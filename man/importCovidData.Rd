@@ -11,13 +11,14 @@ importCovidData(from_web = T)
 }
 \value{
 Output is a dataframe with columns for disease (covid), province (location specific), 
-region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
+  region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
 }
 \description{
 Imports data from public github repo on Covid cases by date and location 
   (with latitude and longitude), reformats, cleans, and merges with population data
 }
 \examples{
-importCovidData(from_web = )
+importCovidData()               # defaults to from_web = T
+importCovidData(from_web = F)   # returns historical subset of data
 
 }

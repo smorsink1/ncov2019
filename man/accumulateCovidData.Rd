@@ -16,6 +16,6 @@ Imports data from public Johns Hopkins CSSEGISandData github repo on coronavirus
   in a tidy dataset
 }
 \examples{
-importCovidData()
+accumulateCovidData()
 
 }

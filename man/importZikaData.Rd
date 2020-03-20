@@ -18,5 +18,7 @@ Imports data from public github repo on Zika cases by date and location,
   reformats, cleans, and merges with population and latitude-longitude data
 }
 \examples{
+importZikaData()   # from_web defaults to FALSE
+importZikaData(from_web = T) 
 
 }

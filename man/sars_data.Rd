@@ -6,14 +6,14 @@
 \title{SARS Data}
 \format{A tibble with 31551 rows and 8 columns
 \describe{
-  \item{disease} "sars" for all rows
-  \item{region} a general location identifier, usually the country
-  \item{date} the date of the observation
-  \item{value} an integer representing the quantity of value_type for that observation
-  \item{value_type} either "cases", "deaths", or "recovered"
-  \item{pop_2003} region population data for 2003
-  \item{lat} the latitude of the region
-  \item{long} the longitude of the region
+  \item{disease}{"sars" for all rows}
+  \item{region}{a general location identifier, usually the country}
+  \item{date}{the date of the observation}
+  \item{value}{an integer representing the quantity of value_type for that observation}
+  \item{value_type}{either "cases", "deaths", or "recovered"}
+  \item{pop_2003}{region population data for 2003}
+  \item{lat}{the latitude of the region}
+  \item{long}{the longitude of the region}
 }}
 \source{
 \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/sars_data.csv}

@@ -28,7 +28,7 @@
 #' 
 #' @examples 
 #' mapPlotStatic(importCovidData(), selected_date = "2020-02-19", selected_value_type = "cases", alpha = 0.3)
-#' mapPlotStatic(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple"))
+#' mapPlotStatic(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple")
 #' mapPlotStatic(filterDiseaseData(importZikaData()), selected_date = "2016-05-03", selected_value_type = "cases", 
 #' color = "purple", congregate = TRUE)
 #' 

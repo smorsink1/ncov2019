@@ -71,6 +71,7 @@ cleanSARSData <- function() {
 #' @return Output is a dataframe with columns for disease (sars),
 #' region (country), value, value_type, pop_2016, lat (latitude), long (longitude)
 #' 
+#' @importFrom utils data
 #' @importFrom magrittr %>%
 #' @importFrom dplyr left_join select rename filter
 #' 
@@ -81,7 +82,7 @@ cleanSARSData <- function() {
 #' 
 importSARSData <- function(from_web = F) {
   if (!from_web) {
-    data("sars_data", envir = environment())
+    utils::data("sars_data", envir = environment())
     return (sars_data)
   }
   pop_map <- buildPopulationMap() %>%

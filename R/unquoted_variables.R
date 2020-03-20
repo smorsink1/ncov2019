@@ -1,0 +1,43 @@
+
+#' Avoiding known build notes from unquoted tidyverse variables
+#'   (wrongly interpreted as global variables)
+#'
+#' @importFrom utils globalVariables
+
+utils::globalVariables(names = c("disease",                
+                                 "region_name",            
+                                 "country_pop_data_raw",   
+                                 "Country",
+                                 "Cumulative number of cases",
+                                 "Number_of_deaths",
+                                 "Number recovered",
+                                 "cases",
+                                 "deaths",
+                                 "recovered",
+                                 "region",
+                                 "value",
+                                 "value_type",
+                                 "zika_confirmed_laboratory",
+                                 "zika_confirmed_clinic",
+                                 "province",
+                                 "pop_2016",
+                                 "lat",
+                                 "long",
+                                 "latitude",
+                                 "longitude",
+                                 "name",
+                                 "covid_name",
+                                 "pop_2018",
+                                 "sars_name",
+                                 "zika_name",
+                                 "pop_2003",
+                                 "pop",
+                                 "day_of_disease",
+                                 "diffs",
+                                 "data_field_code",
+                                 "time_period",
+                                 "time_period_type",
+                                 "location",
+                                 "location_type",
+                                 "."))
+

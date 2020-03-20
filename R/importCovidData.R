@@ -113,6 +113,7 @@ accumulateCovidData <- function() {
 #' @return Output is a dataframe with columns for disease (covid), province (location specific), 
 #'   region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
 #' 
+#' @importFrom utils data
 #' @importFrom magrittr %>%
 #' @importFrom dplyr left_join select
 #' 
@@ -124,7 +125,7 @@ accumulateCovidData <- function() {
 #' 
 importCovidData <- function(from_web = T) {
   if (!from_web) {
-    data("covid_data", envir = environment())
+    utils::data("covid_data", envir = environment())
     return (covid_data)
   }
   pop_map <- buildPopulationMap() %>%

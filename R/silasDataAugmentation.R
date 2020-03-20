@@ -79,6 +79,7 @@ buildCoordinateMap <- function() {
 #'   "pop_2003" (SARS year), "pop_2016" (Zika year), 
 #'   and "pop_2018" (closest year to Covid for which data is available)
 #' 
+#' @importFrom utils data
 #' @importFrom tibble tibble
 #' @importFrom dplyr left_join full_join filter
 #' @importFrom tidyselect everything
@@ -92,7 +93,7 @@ buildPopulationMap <- function() {
   covid_data <- accumulateCovidData()
   zika_data <- cleanZikaData()
   sars_data <- cleanSARSData()
-  data("country_pop_data_raw", envir = environment())
+  utils::data("country_pop_data_raw", envir = environment())
   pop_data <- country_pop_data_raw
   
   # Covid

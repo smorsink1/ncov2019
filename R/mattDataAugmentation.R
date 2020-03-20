@@ -33,7 +33,7 @@ importCoordinateData <- function() {
 #' 
 #' Adds a column of the data frame that gives the day of the disease, with day 1
 #' being the first date seen in the passed-in data frame in which the threshold number
-#' of cases was reached.
+#' of cases was reached in the value column of the data frame.
 #' 
 #' @param df a data frame for which this day of disease column will be created.
 #' This data frame must contain a column labeled as "date" which is of type "Date"
@@ -47,9 +47,17 @@ importCoordinateData <- function() {
 #' @importFrom dplyr filter summarize mutate
 #' 
 #' @examples 
-#' dayOfDiseaseColumn(importSARSData())
-#' dayOfDiseaseColumn(importCovidData())
-#' dayOfDiseaseColumn(importZikaData())
+#' covid_data <- importCovidData()
+#' dayOfDiseaseColumn(covid_data)
+#' 
+#' covid_us <- filterDiseaseData(covid_data, country = "US")
+#' dayOfDiseaseColumn(covid_us)
+#' 
+#' zika_data <- importZikaData()
+#' dayOfDiseaseColumn(zika_data)
+#' 
+#' sars_data <- importSARSData()
+#' dayOfDiseaseColumn(sars_data)
 #' 
 #' @export
 #'
@@ -77,11 +85,12 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' Congregation of Data Dates
 #' 
 #' Because the Zika data was tracked on different dates in different locations, this function
-#' congregates the value counts over a certain period (taking the maximum if necessary) so that
+#' aligns and congregates the value counts on a weekly basis (taking the maximum if necessary) so that
 #' the dates in the data are aligned for all locations. This function is only to be used on Zika data.
 #' 
-#' WARNING: This function manipulates the data in a way that makes the dates less accurate,
-#' but is beneficial for plotting.
+#' WARNING: This function manipulates the data in a way that makes the dates of observations 
+#' less accurate, but in a way that is beneficial for plotting and understanding the cumulative
+#' growth of the data.
 #' 
 #' @param df a data frame for which the data values will be congregated to weekly dates.
 #' 
@@ -91,31 +100,40 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' @importFrom dplyr mutate slice n filter select
 #' 
 #' @examples 
-#' congregateDataDates(importZikaData())
-#' congregateDataDates(filterDiseaseData(importZikaData(), include_suspected = FALSE))
+#' zika_raw <- importZikaData()
+#' congregateDataDates(zika_raw)
+#' 
+#' zika_confirmed <- filterDiseaseData(zika_raw, include_suspected = FALSE)
+#' congregateDataDates(zika_confirmed)
 #' 
 #' @export
 #'
 
 congregateDataDates <- function(df) {
   
+  # Check that this is Zika data
   if(length(unique(df$disease)) != 1 | unique(df$disease)[1] != "zika"){
     stop("This function is only to be used on Zika data.")
   }
   
+  # Identify first and last dates
   dts = unique(df$date)
   first_date = as.Date(min(dts))
   last_date = (as.Date(max(dts)) + 7)
 
+  # Sequence of weekly dates
   dates_used = seq(first_date, last_date, by = "weeks")
   
+  # Determine all unique province-region combinations
   unique_locations = unique(df[, c('province', 'region', 'value_type', 'pop_2016', 'lat', 'long')])
   
+  # Create data frame which has a row for each unique province-region-dates_used combination
   new_df = unique_locations %>%
     dplyr::mutate(disease = df$disease[1]) %>%
     dplyr::slice(rep(1:(dplyr::n()), each = length(dates_used))) %>%
     dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
   
+  # for-loop which idenitifies the max value from prior week to fill into new data frame
   value_vec = c()
   for(i in 1:nrow(new_df)) {
     if(length(df$province) > 0){
@@ -139,6 +157,7 @@ congregateDataDates <- function(df) {
     if(nrow(narrowed) > 0) {
       value = max(narrowed$value)
     } else {
+      # If no data from prior week, fill in data value from week before
       if(i > 1 && 
          new_df$province[i - 1] == prov && 
          new_df$region[i - 1] == country &&
@@ -149,6 +168,7 @@ congregateDataDates <- function(df) {
     value_vec = c(value_vec, value)
   }
   
+  # Add value column and reformat data frame to match previous format
   new_df = new_df %>%
     dplyr::mutate(value = value_vec) %>%
     dplyr::select(disease, province, region, date, value, value_type, pop_2016, lat, long)

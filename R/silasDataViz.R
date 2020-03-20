@@ -4,19 +4,18 @@
 #' Visualize disease statistics on a day-by-day basis
 #'
 #' @param data disease data to plot (usually the output of filterDiseaseData)
-#' @param plot_what options are: "cases", "recovered", "deaths" (plots totals by date),
-#'   "log_cases", "log_recovered", "log_deaths" (plots log of totals by date),
+#' @param plot_what options are: "cases" (default), "recovered", "deaths" (plots totals by date),
+#'   "log_cases", "log_recovered", "log_deaths" (plots natural log of totals by date),
 #'   "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop" (plots the ratio by date),
 #'   "new_cases", "new_recovered", "new_deaths" (plots change by date) or 
 #'   "growth_factor" (plots new cases divided by new cases on previous date for each date),
-#'   if plot_what is not specified, plots cases, recovered, and deaths by day
 #' @param group options are: "province", "region", or "all" ("all" is the default).
 #'   "province" creates one plot layer for each province in the data,
 #'   "region" creates one plot layer for each region in the data,
 #'   "all" creates one plot layer total
 #' @param x_axis options are "date" ("date" is the default) or "day_of_disease".
 #'   "date" makes the x-axis the calendar date,
-#'   "day_of_disease" makes the x-axis the days since the first case in the group
+#'   "day_of_disease" makes the x-axis the days since the 100th case in the group
 #'   (where group is specified in the group argument)
 #'   
 #' @import ggplot2
@@ -29,13 +28,14 @@
 #' @examples 
 #' covid_data <- importCovidData()
 #' us_covid_data <- filterDiseaseData(covid_data, country = "US")
-#' plotTimeSeries(us_covid_data)
-#' plotTimeSeries(us_covid_data, plot_what = "cases")
-#' plotTimeSeries(us_covid_data, plot_what = "log_cases")
-#' plotTimeSeries(us_covid_data, plot_what = "deaths_per_cases")
-#' plotTimeSeries(us_covid_data, plot_what = "recovered_per_cases")
+#' us_italy_covid_data <- filterDiseaseData(covid_data, country = c("US", "Italy"))
+#' plotTimeSeries(us_italy_covid_data, region = "all")  # will plot aggregate US & Italy cases
+#' plotTimeSeries(us_covid_data, plot_what = "cases")   # will plot US cases
+#' plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region")   # will have one layer for log of US cases, another for log of Italy cases
+#' plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")   # will have one layer for log of US cases, another for log of Italy cases
 #' plotTimeSeries(us_covid_data, plot_what = "cases_per_pop")
-#' plotTimeSeries(us_covid_data, plot_what = "new_cases")
+#' plotTimeSeries(us_covid_data, plot_what = "deaths_per_pop")
+#' plotTimeSeries(us_covid_data, plot_what = "pop_per_cases")
 #' plotTimeSeries(us_covid_data, plot_what = "new_deaths")
 #' plotTimeSeries(us_covid_data, plot_what = "growth_factor")
 #' 
@@ -216,71 +216,3 @@ plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "d
     return (p)
   }
 }
-
-# covid_data <- importCovidData()
-# covid_data_america <- importCovidData() %>%
-#   dplyr::filter(region %in% c("US", "Mexico", "Canada"))
-# zika_data <- importZikaData()
-# zika_data_subset <- filterDiseaseData(zika_data, country = "Colombia", include_suspected = T) %>%
-#   dplyr::bind_rows(filterDiseaseData(zika_data, country = "El_Salvador", include_suspected = T))
-# sars_data <- importSARSData()
-# sars_data_subset <- filterDiseaseData(sars_data, country = "Singapore") %>%
-#   dplyr::bind_rows(filterDiseaseData(sars_data, country = "China"))
-# 
-# covid_data_subset <- covid_data %>%
-#   filterDiseaseData(country = "US") %>%
-#   dplyr::bind_rows(filterDiseaseData(covid_data, country = "China")) %>%
-#   dplyr::bind_rows(filterDiseaseData(covid_data, country = "Italy")) %>%
-#   dplyr::bind_rows(filterDiseaseData(covid_data, country = "Iran")) %>%
-#   dplyr::bind_rows(filterDiseaseData(covid_data, country = "Singapore"))
-# 
-# plotTimeSeries(covid_data_subset, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(covid_data_subset, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(covid_data_subset, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(covid_data_subset, plot_what = "growth_factor", x_axis = "day_of_disease")
-# plotTimeSeries(covid_data, plot_what = "growth_factor", x_axis = "day_of_disease")
-# 
-# plotTimeSeries(covid_data_america, plot_what = "cases", group = "all", x_axis = "date")
-# plotTimeSeries(covid_data_america, plot_what = "cases", group = "all", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "deaths", group = "region", x_axis = "date")
-# plotTimeSeries(data = covid_data_america, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "deaths_per_cases", group = "region")
-# plotTimeSeries(data = covid_data_america, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "log_cases", group = "region")
-# plotTimeSeries(data = covid_data_america, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "cases_per_pop", group = "region")
-# plotTimeSeries(data = covid_data_america, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "new_cases", group = "region")
-# plotTimeSeries(data = covid_data_america, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = covid_data_america, plot_what = "growth_factor", group = "all")
-# plotTimeSeries(data = covid_data_america, plot_what = "growth_factor", x_axis = "day_of_disease")
-# 
-# plotTimeSeries(zika_data_subset, plot_what = "cases", group = "all", x_axis = "date")
-# plotTimeSeries(zika_data_subset, plot_what = "cases", group = "all", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "cases", group = "region", x_axis = "date")
-# plotTimeSeries(data = zika_data_subset, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region")
-# plotTimeSeries(data = zika_data_subset, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "log_cases", group = "region")
-# plotTimeSeries(data = zika_data_subset, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region")
-# plotTimeSeries(data = zika_data_subset, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "new_cases", group = "region")
-# plotTimeSeries(data = zika_data_subset, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = zika_data_subset, plot_what = "growth_factor", group = "all")
-# plotTimeSeries(data = zika_data_subset, plot_what = "growth_factor", x_axis = "day_of_disease")
-# 
-# plotTimeSeries(sars_data_subset, plot_what = "cases", group = "all", x_axis = "date")
-# plotTimeSeries(sars_data_subset, plot_what = "cases", group = "all", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "cases", group = "region", x_axis = "date")
-# plotTimeSeries(data = sars_data_subset, plot_what = "deaths", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "cases_per_pop", group = "region")
-# plotTimeSeries(data = sars_data_subset, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "log_cases", group = "region")
-# plotTimeSeries(data = sars_data_subset, plot_what = "log_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "cases_per_pop", group = "region")
-# plotTimeSeries(data = sars_data_subset, plot_what = "deaths_per_pop", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "new_cases", group = "region")
-# plotTimeSeries(data = sars_data_subset, plot_what = "new_cases", group = "region", x_axis = "day_of_disease")
-# plotTimeSeries(data = sars_data_subset, plot_what = "growth_factor", group = "all")
-# plotTimeSeries(data = sars_data_subset, plot_what = "growth_factor", x_axis = "day_of_disease")

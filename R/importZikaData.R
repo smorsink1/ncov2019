@@ -201,6 +201,8 @@ cleanZikaData <- function() {
 #' @importFrom dplyr left_join select rename
 #' 
 #' @examples 
+#' importZikaData()   # from_web defaults to FALSE
+#' importZikaData(from_web = T) 
 #' 
 #' @export
 #' 

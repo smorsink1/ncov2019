@@ -1,4 +1,4 @@
-#' Downloads Time-Series Coronavirus Data
+#' Scrapes Time-Series Coronavirus Data
 #'
 #' Imports data from public Johns Hopkins CSSEGISandData github repo on
 #'   day-by-day coronavirus confirmed cases, deaths, and recoveries by location
@@ -8,16 +8,17 @@
 #'   or "recovered" for recoveries
 #' 
 #' @return Output is a dataframe with rows representing locations,
-#'   columns representing dates, values representing the number of people 
+#'   columns representing dates, values representing the number of cases/deaths/recovered
+#'   for that location/date combination 
 #'
 #' @importFrom readr read_csv
 #' @importFrom magrittr %>%
 #' 
 #' @examples
-#' importCovidData()
-#' importCovidData("cases")
-#' importCovidData("deaths")
-#' importCovidData("recovered") 
+#' scrapeCovidData()    # defaults to scrape "cases"
+#' scrapeCovidData("cases")
+#' scrapeCovidData("deaths")
+#' scrapeCovidData("recovered") 
 #' 
 #' @export
 #' 
@@ -54,6 +55,7 @@ scrapeCovidData <- function(type = "cases") {
 #' @examples 
 #' tidyCovidData(scrapeCovidData())
 #' tidyCovidData(scrapeCovidData("cases"))
+#' tidyCovidData(scrapeCovidData("deaths"))
 #' 
 #' @export
 #' 
@@ -86,7 +88,7 @@ tidyCovidData <- function(covid_df, covid_df_name) {
 #' @importFrom tidyselect everything
 #' 
 #' @examples 
-#' importCovidData()
+#' accumulateCovidData()
 #' 
 #' @export
 #' 
@@ -109,13 +111,14 @@ accumulateCovidData <- function() {
 #' @param from_web defaults to TRUE: whether to import from the web or from the package
 #'
 #' @return Output is a dataframe with columns for disease (covid), province (location specific), 
-#' region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
+#'   region (location general), lat (latitude), long (longitude), date, value, value_type, pop_2018
 #' 
 #' @importFrom magrittr %>%
 #' @importFrom dplyr left_join select
 #' 
 #' @examples 
-#' importCovidData(from_web = )
+#' importCovidData()               # defaults to from_web = T
+#' importCovidData(from_web = F)   # returns historical subset of data
 #' 
 #' @export
 #' 

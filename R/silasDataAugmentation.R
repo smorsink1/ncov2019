@@ -13,6 +13,9 @@
 #' @importFrom dplyr left_join full_join filter
 #' @importFrom tidyselect everything
 #'
+#' @examples 
+#' buildCoordinateMap()
+#'
 #' @export
 #'   
 buildCoordinateMap <- function() {
@@ -73,13 +76,15 @@ buildCoordinateMap <- function() {
 #'   
 #' @return Output is a dataframe with columns "region_name" 
 #'   (the standard country name of region), "covid_name", "zika_name", "sars_name",
-#'   "latitude", and "longitude"
+#'   "pop_2003" (SARS year), "pop_2016" (Zika year), 
+#'   and "pop_2018" (closest year to Covid for which data is available)
 #' 
 #' @importFrom tibble tibble
 #' @importFrom dplyr left_join full_join filter
 #' @importFrom tidyselect everything
 #'
 #' @examples 
+#' buildPopulationMap()
 #' 
 #' @export
 #'   

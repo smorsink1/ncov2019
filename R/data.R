@@ -31,11 +31,11 @@ NULL
 #' 
 #' @format A tibble with 265 rows and 5 columns
 #' \describe{
-#'   \item{country_name}
-#'   \item{country_code}
-#'   \item{pop_2003}
-#'   \item{pop_2016}
-#'   \item{pop_2018}
+#'   \item{country_name}{name of the country}
+#'   \item{country_code}{abbreviated code for the country}
+#'   \item{pop_2003}{2003 population}
+#'   \item{pop_2016}{2016 population}
+#'   \item{pop_2018}{2018 population}
 #' }
 #' @source \url{https://data.worldbank.org/indicator/SP.POP.TOTL}
 NULL

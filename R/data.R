@@ -51,15 +51,15 @@ NULL
 #' 
 #' @format A tibble with 27405 rows and 9 columns
 #' \describe{
-#'   \item{disease} "covid" for all rows
-#'   \item{province} the most granular location identifier
-#'   \item{region} a general location identifier, usually the country
-#'   \item{lat} the latitude of the location
-#'   \item{long} the longitude of the location
-#'   \item{date} the date of the observation
-#'   \item{value} an integer representing the quantity of value_type for that observation
-#'   \item{value_type} either "cases", "deaths", or "recovered"
-#'   \item{pop_2018} region population data for 2018
+#'   \item{disease}{"covid" for all rows}
+#'   \item{province}{the most granular location identifier}
+#'   \item{region}{a general location identifier, usually the country}
+#'   \item{lat}{the latitude of the location}
+#'   \item{long}{the longitude of the location}
+#'   \item{date}{the date of the observation}
+#'   \item{value}{an integer representing the quantity of value_type for that observation}
+#'   \item{value_type}{either "cases", "deaths", or "recovered"}
+#'   \item{pop_2018}{region population data for 2018}
 #' }
 #' @source \url{https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv}
 NULL
@@ -74,15 +74,15 @@ NULL
 #' 
 #' @format A tibble with 4228 rows and 9 columns
 #' \describe{
-#'   \item{disease} "zika" for all rows
-#'   \item{province} the most granular location identifier
-#'   \item{region} a general location identifier, usually the country
-#'   \item{date} the date of the observation
-#'   \item{value} an integer representing the quantity of value_type for that observation
-#'   \item{value_type} either "cumulative_confirmed_cases" or "cumulative_suspected_cases"
-#'   \item{pop_2016} region population data for 2016
-#'   \item{lat} the latitude of the region
-#'   \item{long} the longitude of the region
+#'   \item{disease}{"zika" for all rows}
+#'   \item{province}{the most granular location identifier}
+#'   \item{region}{a general location identifier, usually the country}
+#'   \item{date}{the date of the observation}
+#'   \item{value}{an integer representing the quantity of value_type for that observation}
+#'   \item{value_type}{either "cumulative_confirmed_cases" or "cumulative_suspected_cases"}
+#'   \item{pop_2016}{region population data for 2016}
+#'   \item{lat}{the latitude of the region}
+#'   \item{long}{the longitude of the region}
 #' }
 #' @source \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/cdc_zika.csv}
 NULL
@@ -97,14 +97,14 @@ NULL
 #' 
 #' @format A tibble with 31551 rows and 8 columns
 #' \describe{
-#'   \item{disease} "sars" for all rows
-#'   \item{region} a general location identifier, usually the country
-#'   \item{date} the date of the observation
-#'   \item{value} an integer representing the quantity of value_type for that observation
-#'   \item{value_type} either "cases", "deaths", or "recovered"
-#'   \item{pop_2003} region population data for 2003
-#'   \item{lat} the latitude of the region
-#'   \item{long} the longitude of the region
+#'   \item{disease}{"sars" for all rows}
+#'   \item{region}{a general location identifier, usually the country}
+#'   \item{date}{the date of the observation}
+#'   \item{value}{an integer representing the quantity of value_type for that observation}
+#'   \item{value_type}{either "cases", "deaths", or "recovered"}
+#'   \item{pop_2003}{region population data for 2003}
+#'   \item{lat}{the latitude of the region}
+#'   \item{long}{the longitude of the region}
 #' }
 #' @source \url{https://raw.githubusercontent.com/mcolon21/ncov2019data/master/sars_data.csv}
 NULL

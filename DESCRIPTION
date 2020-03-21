@@ -12,5 +12,8 @@ Imports: ggplot2 (>= 3.0.0), dplyr, ggthemes, gifski, lubridate, magrittr,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.1.0.9000
+VignetteBuilder: knitr

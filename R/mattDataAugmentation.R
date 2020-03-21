@@ -106,8 +106,8 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' @export
 #'
 
+
 congregateDataDates <- function(df) {
-  
   # Check that this is Zika data
   if(length(unique(df$disease)) != 1 | unique(df$disease)[1] != "zika"){
     stop("This function is only to be used on Zika data.")
@@ -129,6 +129,36 @@ congregateDataDates <- function(df) {
     dplyr::mutate(disease = df$disease[1]) %>%
     dplyr::slice(rep(1:(dplyr::n()), each = length(dates_used))) %>%
     dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
+  
+  #------------------------------------------------------------------
+  small = function(r, df, new_df) {
+    if(length(df$province) > 0){
+      prov = new_df[r,"province"][[1]]
+    }
+    country = new_df[r,"region"][[1]]
+    value_type = new_df[r,"value_type"][[1]]
+    dt = as.Date(new_df[r,"date"][[1]])
+    narrowed = df %>%
+      dplyr::filter(region == country) %>%
+      dplyr::filter(value_type == value_type) %>%
+      dplyr::filter(date <= dt) %>%
+      dplyr::filter(date >= (as.Date(dt) - 6))
+    
+    if(length(df$province) > 0) {
+      narrowed = narrowed %>%
+        dplyr::filter(province == prov)
+    }
+    
+    value = 0
+    if(nrow(narrowed) > 0) {
+      value = max(narrowed$value)
+    }
+    return(value)
+  }
+
+  sapply(1:nrow(new_df), function(x) small(x, df, new_df))
+  #------------------------------------------------------------------
+  
   
   # for-loop which idenitifies the max value from prior week to fill into new data frame
   value_vec = c()
@@ -165,6 +195,7 @@ congregateDataDates <- function(df) {
     value_vec = c(value_vec, value)
   }
   
+  value_vec
   # Add value column and reformat data frame to match previous format
   new_df = new_df %>%
     dplyr::mutate(value = value_vec) %>%

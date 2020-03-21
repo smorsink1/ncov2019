@@ -37,7 +37,6 @@ scrapeSARSData <- function() {
 #'
 #' @export
 
-# rename cleanSarsData
 cleanSARSData <- function() {
   sars_df = scrapeSARSData() %>%
     dplyr::rename(region = Country, 

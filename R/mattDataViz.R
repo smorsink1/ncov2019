@@ -154,7 +154,7 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' covid_data <- importCovidData()
 #' sars_data <- importSARSData()
 #' zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
-#' mapPlotAnimate(covid_data, dps = 3)
+#' mapPlotAnimate(covid_data, fps = 6)
 #' mapPlotAnimate(sars_data, selected_value_type = "recovered")
 #' mapPlotAnimate(zika_data, color = "green", alpha = 0.7)
 #' 

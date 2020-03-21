@@ -24,12 +24,103 @@ library(ncov2019)
 To easily import data on COVID-19, Zika, or SARS, use the corresponding `import` function:
 
 ``` {r}
-# covid_data <- importCovidData()    # default from_web = TRUE
-# zika_data <- importZikaData()      # default from_web = FALSE
-# sars_data <- importSARSData()      # default from_web = FALSE
+covid_data <- importCovidData()    # default from_web = TRUE
+zika_data <- importZikaData()      # default from_web = FALSE
+sars_data <- importSARSData()      # default from_web = FALSE
 ```
 
 Because Zika data and SARS data are no longer changing, it is not necessary to load data from the web. By setting `from_web = FALSE`, the function simply loads the data from the `data` directory. For COVID-19, to get the most up-to-date information, we need `from_web = TRUE` (the default). If you set `from_web = FALSE` for `importCovidData()`, the function will load the saved COVID-19 data from the `data` directory, which only goes through 2020-03-06. 
 
-Behind the scenes, the `import` functions are using other functions for data acquisition and cleaning. These functions are also exported for the user to observe and potentially modify. `importCovidData()` calls `scrapeCovidData()` to pull data from the web, then `tidyCovidData()` to reformat it, then `accumulateCovidData()` to pull together data on cases, deaths, and recovered.
+Behind the scenes, the `import` functions are using other functions for data acquisition and cleaning. These functions are also exported for the user to observe and potentially modify. `importCovidData()` calls `scrapeCovidData()` to pull data from the web, then `tidyCovidData()` to reformat it, then `accumulateCovidData()` to pull together data on cases, deaths, and recovered. `importZikaData()` calls `scrapeZikaData()` to pull data from the web, then `reformatZikaData()` to reformat it, then `cleanZikaData()` to reconcile data reporting differences. `importSARSData()` calls `scrapeSARSData()` to pull data from the web, then `cleanSARSData()` to reformat it and address data issues. 
+
+## Filtering Data 
+
+After importing disease data, the next step is to filter the data. `filterDiseaseData()` allows for easy filtering of the data by date, region (country), province (more specific location information than country), value type ("cases", "deaths", or "recovered"), and value (number of cases, deaths, or recovered). Although other data filtering options exist, `filterDiseaseData()` is preferrable in the context of the `ncov2019` package. The output is guaranteed to be compatible with the plotting functions, and `filterDiseaseData()` checks the input data for compatibility as well.   
+
+``` {r}
+
+us_covid_data <- filterDiseaseData(covid_data, country = "US")
+head(us_covid_data)
+
+us_covid_cases_above_100 <- filterDiseaseData(covid_data, country = "US", type = "cases", min_value = 100)
+head(us_covid_cases_above_100)
+
+us_italy_covid_data <- filterDiseaseData(covid_data, country = c("US", "Italy"))
+head(us_italy_covid_data)
+
+china_covid_cases_deaths <- filterDiseaseData(covid_data, country = "China", type = c("cases", "deaths"))
+head(china_covid_cases_deaths)
+
+covid_data_march_20 <- filterDiseaseData(covid_data, first_date = "2020-03-20", last_date = "2020-03-20")
+
+zika_data_may <- filterDiseaseData(zika_data, first_date = "2016-05-01", last_date = "2016-05-31")
+head(zika_data_may)
+
+zika_data_may_include_suspected <- filterDiseaseData(zika_data, first_date = "2016-05-01", last_date = "2016-05-31", include_suspected = TRUE)
+head(zika_data_may_include_suspected)
+
+sars_deaths_june <- filterDiseaseData(sars_data, type = "deaths", first_date = "2003-06-01", last_date = "2003-06-30")
+head(sars_deaths_june)
+
+```
+
+## Plotting Data
+
+After filtering the data down to the data set that you want to visualize, use the plotting functions. `mapPlotStatic()` and `mapPlotAnimate()` display data on a world map.
+
+`mapPlotStatic()` displays one day of data: use the `selected_date` argument to specify which day, and use the `selected_value_type` to specify if you want to visualize "cases", "deaths", or "recovered". Note the use of the `congregate` argument to search for cumulative data during the week near `selected_date`. This is necessary when the data does not have any reporting on `selected_date`. The Zika data and SARS data do not have reporting every day, thus `congregate = TRUE` is recommended when using `mapPlotStatic()` on Zika or SARS data.
+
+``` {r}
+
+mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "cases")
+mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "deaths")
+mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "recovered")
+
+mapPlotStatic(us_covid_cases_above_100, selected_date = "2020-03-20")
+# if the data only includes one value_type, you don't need to specify selected_value_type
+
+mapPlotStatic(covid_data_march_20, selected_value_type = "cases")
+# if the data only includes one date, you don't need to specify selected_date
+
+# for some of the data data, data was reported on different days
+# so, the cumulative numbers for 2016-05-28
+mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-28")
+# don't quite match the cumulative numbers if we look at the week around 2016-05-28
+mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-28", congregate = TRUE)
+# hence, congregate = TRUE is recommended for mapPlotStatic on zika data
+
+# sometimes, mapPlotStatic won't plot anything if there was no reporting on that date
+mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29")
+# in these cases, congregate = TRUE is required
+mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29", congregate = TRUE)
+
+```
+
+`mapPlotAnimate()` displays multiple days of data in an animation. The `first_date` and `last_date` arguments can be used to specify the starting and ending dates, the `selected_value_type` specifies whether you want to visualize "cases", "deaths", or "recovered". The animation will be displayed in the "Viewer" window in RStudio.
+
+``` {r}
+mapPlotAnimate(us_covid_data, first_date = "2020-03-01", last_date = "2020-03-15")
+```
+
+`plotTimeSeries()` displays various disease statistics over time. Specify the y-axis variable with the `plot_what` argument. See documentation for all options for `plot_what`. Specify the layers of the plot with the `group` argument. For example, `group = "region"` will create one layer of the plot for each region in the data. The x-axis variable plots time, either "date" or "day_of_disease" (number of days since the number of cases in the group reaches 100). Specify the x_axis variable with `x_axis` argument.
+
+``` {r}
+
+plotTimeSeries(us_covid_data)
+# defaults: plot cases on the y_axis (plot_what = "cases")
+#         : do not split the data by region of province, accumulate totals on day (group = "all")
+#         : plot date on the x_axis (x_axis = "date")
+
+plotTimeSeries(us_italy_covid_data, group = "region")
+plotTimeSeries(us_italy_covid_data, group = "region", x_axis = "day_of_disease")
+plotTimeSeries(sars_deaths_june, plot_what = "deaths")
+plotTimeSeries(china_covid_cases_deaths, plot_what = "log_cases")
+plotTimeSeries(us_italy_covid_data, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(us_italy_covid_data, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
+plotTimeSeries(china_covid_cases_deaths, plot_what = "new_cases")
+plotTimeSeries(covid_data, plot_what = "growth_factor", x_axis = "day_of_disease")
+plotTimeSeries(sars_data, plot_what = "growth_factor", x_axis = "day_of_disease")
+plotTimeSeries(zika_data_may_include_suspected, plot_what = "cases", x_axis = "date")
+
+```
 

@@ -34,8 +34,11 @@ latitude and longitude data over the range of dates specified.
 Generates an animated global map plot of a certain value of data.
 }
 \examples{
-mapPlotAnimate(importCovidData())
-mapPlotAnimate(importSARSData())
-mapPlotAnimate(filterDiseaseData(importZikaData()))
+covid_data <- importCovidData()
+sars_data <- importSARSData()
+zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
+mapPlotAnimate(covid_data, dps = 3)
+mapPlotAnimate(sars_data, selected_value_type = "recovered")
+mapPlotAnimate(zika_data, color = "green", alpha = 0.7)
 
 }

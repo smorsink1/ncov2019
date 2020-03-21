@@ -15,14 +15,18 @@ knitr::opts_chunk$set(
 )
 ```
 
+``` {r}
+library(ncov2019)
+```
+
 ## Importing Data
 
 To easily import data on COVID-19, Zika, or SARS, use the corresponding `import` function:
 
 ``` {r}
-covid_data <- importCovidData()    # default from_web = TRUE
-zika_data <- importZikaData()      # default from_web = FALSE
-sars_data <- importSARSData()      # default from_web = FALSE
+# covid_data <- importCovidData()    # default from_web = TRUE
+# zika_data <- importZikaData()      # default from_web = FALSE
+# sars_data <- importSARSData()      # default from_web = FALSE
 ```
 
 Because Zika data and SARS data are no longer changing, it is not necessary to load data from the web. By setting `from_web = FALSE`, the function simply loads the data from the `data` directory. For COVID-19, to get the most up-to-date information, we need `from_web = TRUE` (the default). If you set `from_web = FALSE` for `importCovidData()`, the function will load the saved COVID-19 data from the `data` directory, which only goes through 2020-03-06. 

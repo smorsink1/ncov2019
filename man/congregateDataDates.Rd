@@ -14,15 +14,19 @@ Output is a data frame of the same format as the passed-in df, but with congrega
 }
 \description{
 Because the Zika data was tracked on different dates in different locations, this function
-congregates the value counts over a certain period (taking the maximum if necessary) so that
+aligns and congregates the value counts on a weekly basis (taking the maximum if necessary) so that
 the dates in the data are aligned for all locations. This function is only to be used on Zika data.
 }
 \details{
-WARNING: This function manipulates the data in a way that makes the dates less accurate,
-but is beneficial for plotting.
+WARNING: This function manipulates the data in a way that makes the dates of observations 
+less accurate, but in a way that is beneficial for plotting and understanding the cumulative
+growth of the data.
 }
 \examples{
-congregateDataDates(importZikaData())
-congregateDataDates(filterDiseaseData(importZikaData(), include_suspected = FALSE))
+zika_raw <- importZikaData()
+congregateDataDates(zika_raw)
+
+zika_confirmed <- filterDiseaseData(zika_raw, include_suspected = FALSE)
+congregateDataDates(zika_confirmed)
 
 }

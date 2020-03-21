@@ -24,7 +24,7 @@ and "recovered".}
 \item{alpha}{Transparency level of points on world map. Default is 0.5.}
 
 \item{congregate}{Only applies to Zika data. Since Zika data was tracked on a scattered weekly basis,
-this determines whether or not the user would like to congreagate the data (TRUE) or just to
+this determines whether or not the user would like to congregate the data (TRUE) or just to
 see the data tracked on the selected date in the passed-in data frame (FALSE). Note that if congregate is
 TRUE, the exact date won't be returned, but rather the closest congregation date prior to the selected date.
 Defaults to FALSE.}
@@ -37,9 +37,15 @@ latitude and longitude data.
 Generates a static global map plot of a certain value of data.
 }
 \examples{
-mapPlotStatic(importCovidData(), selected_date = "2020-02-19", selected_value_type = "cases", alpha = 0.3)
-mapPlotStatic(importSARSData(), selected_date = "2003-04-02", selected_value_type = "deaths", color = "purple"))
-mapPlotStatic(filterDiseaseData(importZikaData()), selected_date = "2016-05-03", selected_value_type = "cases", 
-color = "purple", congregate = TRUE)
+covid_data <- importCovidData()
+sars_data <- importSARSData()
+zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
+
+mapPlotStatic(covid_data, selected_date = "2020-03-19", 
+selected_value_type = "cases", alpha = 0.3)
+mapPlotStatic(sars_data, selected_date = "2003-04-02", 
+selected_value_type = "deaths", color = "purple")
+mapPlotStatic(zika_data, selected_date = "2016-05-03", 
+selected_value_type = "cases", color = "purple", congregate = TRUE)
 
 }

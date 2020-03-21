@@ -19,11 +19,19 @@ Output is the passed-in data frame with the addition of a day_of_disease column.
 \description{
 Adds a column of the data frame that gives the day of the disease, with day 1
 being the first date seen in the passed-in data frame in which the threshold number
-of cases was reached.
+of cases was reached in the value column of the data frame.
 }
 \examples{
-dayOfDiseaseColumn(importSARSData())
-dayOfDiseaseColumn(importCovidData())
-dayOfDiseaseColumn(importZikaData())
+covid_data <- importCovidData()
+dayOfDiseaseColumn(covid_data)
+
+covid_us <- filterDiseaseData(covid_data, country = "US")
+dayOfDiseaseColumn(covid_us)
+
+zika_data <- importZikaData()
+dayOfDiseaseColumn(zika_data)
+
+sars_data <- importSARSData()
+dayOfDiseaseColumn(sars_data)
 
 }

@@ -28,9 +28,9 @@
 #' @importFrom dplyr mutate
 #' 
 #' @examples 
-#' filterDiseaseData(country = c("Japan", "Italy", "US"))
-#' filterDiseaseData("sars", value_type = c("cases", "deaths"), min_value = 10)
-#' filterDiseaseData("zika", first_date = "2016-05-01", last_date = "2016-05-31")
+#' filterDiseaseData(importCovidData(from_web = F), country = c("Japan", "Italy", "US"))
+#' filterDiseaseData(importSARSData(), value_type = c("cases", "deaths"), min_value = 10)
+#' filterDiseaseData(importZikaData(), first_date = "2016-05-01", last_date = "2016-05-31")
 #' 
 #' @export
 #'
@@ -48,11 +48,11 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
       data$value_type = "cases"
     }
   }
-  
-  if(!is.na(first_date) & !(as.Date(first_date) %in% unique(data$date))) {
+  # 
+  if(!is.na(first_date) & !(as.Date(first_date) %in% seq(min(data$date), max(data$date), by = 1))) {
     stop(paste0("First date must be in the data set, which contains dates ", min(unique(data$date)), " to ", max(unique(data$date)), "."))
   }
-  if(!is.na(last_date) & !(as.Date(last_date) %in% unique(data$date))) {
+  if(!is.na(last_date) & !(as.Date(last_date) %in% seq(min(data$date), max(data$date), by = 1))) {
     stop(paste0("Last date must be in the data set, which contains dates ", min(unique(data$date)), " to ", max(unique(data$date)), "."))
   }
   if(!is.na(first_date) & !is.na(last_date) & as.Date(first_date) > as.Date(last_date)) {

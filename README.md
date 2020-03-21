@@ -6,6 +6,8 @@
 
 `ncov2019` is an R package for acquiring and visualizing data on COVID-19 and other diseases (Zika and SARS). It includes functions for scraping and cleaning data on each of these diseases, filtering disease data, and visualizing data on a map or a time-series graph. It also includes data: disease data by location for SARS, Zika, and COVID-19, country population data, and country latitude/longitude data.
 
+ADD DISCLAIMERS about data reliability, 
+
 ## Functionality
 
 The package functionality has three main phases: importing data, filtering data, and visualizing data.

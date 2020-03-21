@@ -68,19 +68,17 @@ head(sars_deaths_june)
 
 After filtering the data down to the data set that you want to visualize, use the plotting functions. `mapPlotStatic()` and `mapPlotAnimate()` display data on a world map.
 
-`mapPlotStatic()` displays one day of data: use the `selected_date` argument to specify which day, and use the `selected_value_type` to specify if you want to visualize "cases", "deaths", or "recovered". Note the use of the `congregate` argument to search for cumulative data during the week near `selected_date`. This is necessary when the data does not have any reporting on `selected_date`. The Zika data and SARS data do not have reporting every day, thus `congregate = TRUE` is recommended when using `mapPlotStatic()` on Zika or SARS data.
+`mapPlotStatic()` displays one day of data: use the `selected_date` argument to specify which day, and use the `selected_value_type` to specify if you want to visualize "cases", "deaths", or "recovered". Note the use of the `congregate` argument to search for cumulative data during the week near `selected_date`. This is necessary when the data does not have any reporting on `selected_date`. The Zika data does not have reporting every day, thus `congregate = TRUE` is recommended when using `mapPlotStatic()` on Zika data.
 
 ``` {r}
 
 mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "cases")
-mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "deaths")
-mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "recovered")
-
-mapPlotStatic(us_covid_cases_above_100, selected_date = "2020-03-20")
-# if the data only includes one value_type, you don't need to specify selected_value_type
-
-mapPlotStatic(covid_data_march_20, selected_value_type = "cases")
-# if the data only includes one date, you don't need to specify selected_date
+# mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "deaths")
+# mapPlotStatic(covid_data, selected_date = "2020-03-20", selected_value_type = "recovered")
+# mapPlotStatic(us_covid_cases_above_100, selected_date = "2020-03-20")
+### if the data only includes one value_type, you don't need to specify selected_value_type
+# mapPlotStatic(covid_data_march_20, selected_value_type = "cases")
+### if the data only includes one date, you don't need to specify selected_date
 
 # for some of the data data, data was reported on different days
 # so, the cumulative numbers for 2016-05-28
@@ -89,10 +87,10 @@ mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-28")
 mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-28", congregate = TRUE)
 # hence, congregate = TRUE is recommended for mapPlotStatic on zika data
 
-# sometimes, mapPlotStatic won't plot anything if there was no reporting on that date
-mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29")
-# in these cases, congregate = TRUE is required
-mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29", congregate = TRUE)
+### sometimes, mapPlotStatic won't plot anything if there was no reporting on that date
+# mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29")
+### in these cases, congregate = TRUE is required
+# mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-29", congregate = TRUE)
 
 ```
 
@@ -113,13 +111,13 @@ plotTimeSeries(us_covid_data)
 
 plotTimeSeries(us_italy_covid_data, group = "region")
 plotTimeSeries(us_italy_covid_data, group = "region", x_axis = "day_of_disease")
-plotTimeSeries(sars_deaths_june, plot_what = "deaths")
-plotTimeSeries(china_covid_cases_deaths, plot_what = "log_cases")
+# plotTimeSeries(sars_deaths_june, plot_what = "deaths")
+# plotTimeSeries(china_covid_cases_deaths, plot_what = "log_cases")
 plotTimeSeries(us_italy_covid_data, plot_what = "cases_per_pop", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(us_italy_covid_data, plot_what = "deaths_per_cases", group = "region", x_axis = "day_of_disease")
 plotTimeSeries(china_covid_cases_deaths, plot_what = "new_cases")
-plotTimeSeries(covid_data, plot_what = "growth_factor", x_axis = "day_of_disease")
-plotTimeSeries(sars_data, plot_what = "growth_factor", x_axis = "day_of_disease")
+# plotTimeSeries(covid_data, plot_what = "growth_factor", x_axis = "day_of_disease")
+# plotTimeSeries(sars_data, plot_what = "growth_factor", x_axis = "day_of_disease")
 plotTimeSeries(zika_data_may_include_suspected, plot_what = "cases", x_axis = "date")
 
 ```

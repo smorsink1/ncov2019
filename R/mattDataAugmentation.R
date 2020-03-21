@@ -99,12 +99,9 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate slice n filter select
 #' 
-#' @examples 
+#' @examples
 #' zika_raw <- importZikaData()
 #' congregateDataDates(zika_raw)
-#' 
-#' zika_confirmed <- filterDiseaseData(zika_raw, include_suspected = FALSE)
-#' congregateDataDates(zika_confirmed)
 #' 
 #' @export
 #'

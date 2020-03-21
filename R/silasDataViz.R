@@ -8,7 +8,7 @@
 #'   "log_cases", "log_recovered", "log_deaths" (plots natural log of totals by date),
 #'   "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop" (plots the ratio by date),
 #'   "new_cases", "new_recovered", "new_deaths" (plots change by date) or 
-#'   "growth_factor" (plots new cases divided by new cases on previous date for each date),
+#'   "growth_factor" (plots new cases divided by new cases on previous date for each date)
 #' @param group options are: "province", "region", or "all" ("all" is the default).
 #'   "province" creates one plot layer for each province in the data,
 #'   "region" creates one plot layer for each region in the data,
@@ -42,6 +42,9 @@
 #' @export 
 #' 
 plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "date") {
+  if (data$disease == "zika") {
+    data <- congregateDataDates(data)
+  }
   names(data)[grepl("pop", names(data))] <- "pop"
   if (!(group %in% c("all", "province", "region"))) {
     stop ("'group' argument must be 'all', 'province', or 'region'")

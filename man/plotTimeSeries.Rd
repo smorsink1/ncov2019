@@ -14,7 +14,7 @@ plotTimeSeries(data, plot_what = "cases", group = "all",
 "log_cases", "log_recovered", "log_deaths" (plots natural log of totals by date),
 "x_per_y" where x and y are either "cases", "recovered", "deaths", or "pop" (plots the ratio by date),
 "new_cases", "new_recovered", "new_deaths" (plots change by date) or 
-"growth_factor" (plots new cases divided by new cases on previous date for each date),}
+"growth_factor" (plots new cases divided by new cases on previous date for each date)}
 
 \item{group}{options are: "province", "region", or "all" ("all" is the default).
 "province" creates one plot layer for each province in the data,

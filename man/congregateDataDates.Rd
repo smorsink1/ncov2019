@@ -26,7 +26,4 @@ growth of the data.
 zika_raw <- importZikaData()
 congregateDataDates(zika_raw)
 
-zika_confirmed <- filterDiseaseData(zika_raw, include_suspected = FALSE)
-congregateDataDates(zika_confirmed)
-
 }

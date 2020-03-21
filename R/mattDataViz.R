@@ -138,7 +138,7 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' and "recovered".
 #' @param color Color of points on world map. Default is red.
 #' @param alpha Transparency level of points on world map. Default is 0.5.
-#' @param dps Number of dates displayed per second for the animation. Default is 5.
+#' @param fps Number of frames displayed per second for the animation. Default is 10.
 #' 
 #' @return Output is an animated ggplot object which maps the chosen value on a world map using
 #' latitude and longitude data over the range of dates specified. 
@@ -160,7 +160,7 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' 
 #' @export
 #'
-mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5, dps = 5) {
+mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5, fps = 10) {
   # Ensures longitude column is present in data
   if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
     stop('\"long\" column is either missing from data or is not of type \"numeric\".')
@@ -229,6 +229,6 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
                           labels = c(1,10,100,1000,10000,100000))
   
   #Animates plots at desired speed
-  gganimate::animate(map, fps = (dps*2))
+  gganimate::animate(map, fps = fps)
 }
 

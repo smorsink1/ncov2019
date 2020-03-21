@@ -156,7 +156,7 @@ congregateDataDates <- function(df) {
     return(value)
   }
 
-  sapply(1:nrow(new_df), function(x) small(x, df, new_df))
+  value_vec = sapply(1:nrow(new_df), function(x) small(x, df, new_df))
   #------------------------------------------------------------------
   
   

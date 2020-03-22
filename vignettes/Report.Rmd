@@ -44,13 +44,18 @@ plotTimeSeries(use_case_1_data, plot_what = "cases_per_pop", group = "region",
 
 For example, map plots are a visually attractive and aesthetic way to display data to the general public who may not be as familiar with this type of data as experts are. In order to see a static plot of cumulative coronavirus cases on a specific date (such as March 21, 2019), as well as an animated plot of the coronavirus deaths worldwide caused by the Coronavirus everyday since January 22, one would complete the following workflow:
 
+Note: Below, warnings have been suppressed on the `mapPlotAnimate()` function. The reason for this is that since the sizing of the points on the animation plot is `log10(value)`, all rows which are `value = 0` will output a size of negative infinity, since `log10(0) = -Inf`. Attempting to plot points of size -Inf is what returns a warning. However, these rows of `value = 0` must be kept in the animated data frame in order to create a fluid animation using the gganimate package. Additionally, since `value = 0`, we don't want these rows plotted anyways. Thus, these warnings remain, but they do not deter the construction of the animation in any way.
+
 ```{r use_case_2}
 use_case_2_data <- importCovidData()
 
 mapPlotStatic(use_case_2_data, selected_date = "2020-03-21", selected_value_type = "cases")
 
-mapPlotAnimate(use_case_2_data, selected_value_type = "deaths", color = "black")
+suppressWarnings(
+    mapPlotAnimate(use_case_2_data, selected_value_type = "deaths", color = "black")
+)
 ```
+
 
 
 ## Team Member Contributions

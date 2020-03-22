@@ -96,8 +96,12 @@ mapPlotStatic(zika_data_may_include_suspected, selected_date = "2016-05-28", con
 
 `mapPlotAnimate()` displays multiple days of data in an animation. The `first_date` and `last_date` arguments can be used to specify the starting and ending dates, the `selected_value_type` specifies whether you want to visualize "cases", "deaths", or "recovered". The animation will be displayed in the "Viewer" window in RStudio.
 
+Note: Below, warnings have been suppressed on the `mapPlotAnimate()` function. The reason for this is that since the sizing of the points on the animation plot is `log10(value)`, all rows which are `value = 0` will output a size of negative infinity, since `log10(0) = -Inf`. Attempting to plot points of size -Inf is what returns a warning. However, these rows of `value = 0` must be kept in the animated data frame in order to create a fluid animation using the gganimate package. Additionally, since `value = 0`, we don't want these rows plotted anyways. Thus, these warnings remain, but they do not deter the construction of the animation in any way.
+
 ``` {r}
-mapPlotAnimate(us_covid_data, first_date = "2020-03-01", last_date = "2020-03-15")
+suppressWarnings(
+  mapPlotAnimate(us_covid_data, first_date = "2020-03-01", last_date = "2020-03-15")
+)
 ```
 
 `plotTimeSeries()` displays various disease statistics over time. Specify the y-axis variable with the `plot_what` argument. See documentation for all options for `plot_what`. Specify the layers of the plot with the `group` argument. For example, `group = "region"` will create one layer of the plot for each region in the data. The x-axis variable plots time, either "date" or "day_of_disease" (number of days since the number of cases in the group reaches 100). Specify the x_axis variable with `x_axis` argument.

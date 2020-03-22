@@ -1,6 +1,6 @@
 Package: ncov2019
 Title: Import and Visualize COVID-19, Zika, and SARS Data
-Version: 1.2.0
+Version: 1.3.0
 Authors@R: c(person("Silas", "Morsink", email = "sjm.si.si@gmail.com", 
                      role = c("aut", "cre")),
              person("Matthew", "Colon", email = "",

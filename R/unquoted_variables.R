@@ -37,6 +37,5 @@ utils::globalVariables(names = c("disease",
                                  "location",
                                  "location_type",
                                  ".",
-                                 "value.y",
-                                 "prov"))
+                                 "value.y"))
 

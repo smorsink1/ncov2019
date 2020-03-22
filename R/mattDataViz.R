@@ -27,16 +27,13 @@
 #' @importFrom ggthemes theme_map
 #' 
 #' @examples
-#' covid_data <- importCovidData()
+#' covid_data <- importCovidData(from_web = FALSE)
 #' sars_data <- importSARSData()
-#' zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
 #' 
-#' mapPlotStatic(covid_data, selected_date = "2020-03-19", 
+#' mapPlotStatic(covid_data, selected_date = "2020-03-01", 
 #' selected_value_type = "cases", alpha = 0.3)
 #' mapPlotStatic(sars_data, selected_date = "2003-04-02", 
 #' selected_value_type = "deaths", color = "purple")
-#' mapPlotStatic(zika_data, selected_date = "2016-05-03", 
-#' selected_value_type = "cases", color = "purple", congregate = TRUE)
 #' 
 #' @export
 #'
@@ -154,12 +151,8 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' @importFrom gganimate transition_time animate
 #' 
 #' @examples
-#' # covid_data <- importCovidData()
-#' # sars_data <- importSARSData()
-#' # zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
-#' # mapPlotAnimate(covid_data, fps = 6)
-#' # mapPlotAnimate(sars_data, selected_value_type = "recovered")
-#' # mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
+#' covid_data <- importCovidData(from_web = FALSE)
+#' mapPlotAnimate(covid_data)
 #' 
 #' @export
 #'

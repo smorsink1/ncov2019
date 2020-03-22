@@ -7,19 +7,51 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ncov2019)
 ```
 
-## Package Description
+## Package Description and Challenges
 
-This package drastically improves the user's ability to import, filter, augment, and visualize disease data from the 2003 SARS virus, the 2015-16 Zika, and the 2020 Coronavirus.
+This package enables the user to import, filter, augment, and visualize disease data from the 2003 SARS virus, the 2015-16 Zika virus, and the 2020 Coronavirus. Data augmentation tools include the addition of country population and latitude/longitude data, the addition of a day of disease counter column, and a congregation function that allows for more intuitive graphing of misaligned data collection. Data visualization tools include static and animated map plots of disease data as well as time series plots with the ability to plot various basic and more advanced public health metrics.
+
+In terms of deviations from the original proposal, per Professor Narasimhan's recommendation, we included data from the 2003 SARS virus, due to its similarity with the 2020 Coronavirus. As mentioned in the proposal, we had planned on calculating advanced health metrics - these metrics are solely available to be calculated within the time series plot visualization function of our package using the vast capabilities of its 'plot_what' argument. Additionally, on our proposal, we listed comparative graphs as a potential function - unfortunately, that functionality has not been included in our package.
+
+Major challenges that arose included:
+* Cleaning and re-formatting SARS data (most of which was done before import into package)
+* Dealing with minor, yet troublesome differences in data frames, such as:
+        + Many incoherent value types in Zika data
+        + Different ways of writing different country names in different disease data
+* Understanding errors with the gganimate package for map plot animations
+* Passing R CMD CHECK
 
 
 ## Use Cases for our Package
 
-You can also embed plots, for example:
+**Use Case 1:** Public health researchers will use the package to quickly pull in relevant data from a variety of sources, using the visualization and calculation tools to investigate the spread of the disease and assist in future research. 
 
-```{r pressure, echo=FALSE}
+For example, if a U.S. public health researcher is interested in looking at the percentage of the population infected with the Coronavirus in the U.S.A. compared to some heavily-affected European countries, they would complete the following workflow:
+
+```{r use_case_1}
+use_case_1_data <- 
+    importCovidData() %>%
+    filterDiseaseData(country = c("US", "Italy", "France", "Spain", "United Kingdom"))
+
+plotTimeSeries(use_case_1_data, plot_what = "cases_per_pop", group = "region", 
+                   x_axis = "day_of_disease")
 ```
+
+**Use Case 2:** Members of the general public will use the package to easily gain data-backed insight into the spread of the coronavirus, contributing to public knowledge of the disease and combatting the common misinformation about the disease.
+
+For example, map plots are a visually attractive and aesthetic way to display data to the general public who may not be as familiar with this type of data as experts are. In order to see a static plot of cumulative coronavirus cases on a specific date (such as March 21, 2019), as well as an animated plot of the coronavirus deaths worldwide caused by the Coronavirus everyday since January 22, one would complete the following workflow:
+
+```{r use_case_2}
+use_case_2_data <- importCovidData()
+
+mapPlotStatic(use_case_2_data, selected_date = "2020-03-21", selected_value_type = "cases")
+
+mapPlotAnimate(use_case_2_data, selected_value_type = "deaths", color = "black")
+```
+
 
 ## Team Member Contributions
 

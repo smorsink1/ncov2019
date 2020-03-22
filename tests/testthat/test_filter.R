@@ -9,7 +9,7 @@ test_that("filterDiseaseData works as expected", {
   zika_all <- filterDiseaseData(zika, include_suspected = TRUE)
   expect_true(nrow(zika) == nrow(zika_all))
   
-  zika_dates <- filterDiseaseData(zika, first_date = min(zika$date), last_date = max(zika$date))
+  zika_dates <- filterDiseaseData(zika, first_date = min(zika$date), last_date = max(zika$date), include_suspected = TRUE)
   expect_true(nrow(zika) == nrow(zika_dates))
   
   zika_specific_date <- filterDiseaseData(zika, first_date = unique(zika$date)[15], last_date = unique(zika$date)[15])
@@ -34,7 +34,7 @@ test_that("filterDiseaseData works as expected", {
                 "Mexico" %in% zika_countries$region)
   
   zika_province <- filterDiseaseData(zika, country = c("Brazil", "Mexico", "Argentina"), 
-                                     province = c("CABA"))
+                                     prov = c("CABA"))
   expect_true(length(unique(zika_province$province)) == 1 &
                 "CABA" %in% zika_province$province & 
                 length(unique(zika_province$region)) == 1 & 
@@ -42,8 +42,8 @@ test_that("filterDiseaseData works as expected", {
   
   zika_min_and_max <- filterDiseaseData(zika, min_value = 17, max_value = 39)
   
-  expect_true(min(zika_min_and_max) >= 17 & 
-                max(zika_min_and_max) <= 39)
+  expect_true(min(zika_min_and_max$value) >= 17 & 
+                max(zika_min_and_max$value) <= 39)
   
   expect_error(filterDiseaseData(zika, first_date = unique(zika$date)[order(unique(zika$date))][35],
                                  last_date = unique(zika$date)[order(unique(zika$date))][32]))
@@ -52,15 +52,15 @@ test_that("filterDiseaseData works as expected", {
                
   
   sars <- importSARSData(from_web = F)
-  sars_all <- filterDiseaseData(sars, first_date = "2003-05-01", last_date = "2002-05-31")
+  sars_all <- filterDiseaseData(sars, first_date = "2003-05-01", last_date = "2003-05-31")
   expect_true(length(unique(sars_all$value_type)) == 3 & 
                 "cases" %in% sars_all$value_type & 
                 "deaths" %in% sars_all$value_type & 
                 "recovered" %in% sars_all$value_type)
   
   sars_specific_value_type = filterDiseaseData(sars, type = "recovered")
-  expect_true(length(unique(sars_all$value_type)) == 1 & 
-                "recovered" %in% sars_all$value_type)
+  expect_true(length(unique(sars_specific_value_type$value_type)) == 1 & 
+                "recovered" %in% sars_specific_value_type$value_type)
 })
 
 

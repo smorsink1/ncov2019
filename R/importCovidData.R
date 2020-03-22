@@ -53,9 +53,8 @@ scrapeCovidData <- function(type = "cases") {
 #' @importFrom tidyr pivot_longer
 #' 
 #' @examples 
-#' tidyCovidData(scrapeCovidData())
-#' tidyCovidData(scrapeCovidData("cases"))
-#' tidyCovidData(scrapeCovidData("deaths"))
+#' tidyCovidData(scrapeCovidData("cases"), "cases")
+#' tidyCovidData(scrapeCovidData("deaths"), "deaths")
 #' 
 #' @export
 #' 
@@ -118,7 +117,7 @@ accumulateCovidData <- function() {
 #' @importFrom dplyr left_join select
 #' 
 #' @examples 
-#' importCovidData()                   # defaults to from_web = T
+#' importCovidData()                   # defaults to from_web = TRUE
 #' importCovidData(from_web = FALSE)   # returns historical subset of data
 #' 
 #' @export

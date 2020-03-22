@@ -202,7 +202,6 @@ cleanZikaData <- function() {
 #' 
 #' @examples 
 #' importZikaData()   # from_web defaults to FALSE
-#' importZikaData(from_web = TRUE) 
 #' 
 #' @export
 #' 

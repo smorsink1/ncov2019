@@ -75,7 +75,7 @@ cleanSARSData <- function() {
 #' @importFrom dplyr left_join select rename filter
 #' 
 #' @examples
-#' importSARSData()
+#' importSARSData()    # defaults to from_web = FALSE
 #'
 #' @export
 #' 

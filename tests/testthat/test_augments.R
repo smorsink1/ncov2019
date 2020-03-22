@@ -1,17 +1,25 @@
 context("Testing function for augmenting disease data")
 
 test_that("dayOfDiseaseColumn works as expected", {
-  sars <- dayOfDiseaseColumn(importSARSData(from_web = F))
-  threshold_rows <- sars[which(sars$value_type == "cases" & sars$value >= 100), ]
-  first_date <- min(threshold_rows$date)
-  true_vec <- which(sars$day_of_disease == 1) == which(sars$date == first_date)
-  expect_true(length(unique(true_vec)) == 1 & unique(true_vec)[1])
+  sars <- dayOfDiseaseColumn(importSARSData(from_web = FALSE))
+  threshold_rows <- sars %>%
+    dplyr::filter(value_type == "cases") %>%
+    dplyr::group_by(date) %>%
+    dplyr::summarize(total_cases = sum(value)) %>%
+    dplyr::filter(total_cases >= 100)
   
-  covid <- dayOfDiseaseColumn(importCovidData(), threshold = 7)
-  threshold_rows <- covid[which(covid$value_type == "cases" & covid$value >= 7), ]
-  seventh_date <- (min(threshold_rows$date) + 6)
-  true_vec <- which(covid$day_of_disease == 7) == which(covid$date == seventh_date)
-  expect_true(length(unique(true_vec)) == 1 & unique(true_vec)[1])
+  first_date <- min(threshold_rows$date)
+  expect_true(all(which(sars$day_of_disease == 1) == which(sars$date == first_date)))
+  
+  covid <- dayOfDiseaseColumn(importCovidData(), threshold = 7000)
+  threshold_rows <- covid %>%
+    dplyr::filter(value_type == "cases") %>%
+    dplyr::group_by(date) %>%
+    dplyr::summarize(total_cases = sum(value)) %>%
+    dplyr::filter(total_cases >= 7000)
+  
+  seventh_date_of_threshold <- (min(threshold_rows$date) + 6)
+  expect_true(all(which(covid$day_of_disease == 7) == which(covid$date == seventh_date_of_threshold)))
 })
 
 

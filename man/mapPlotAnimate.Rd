@@ -33,6 +33,10 @@ latitude and longitude data over the range of dates specified.
 \description{
 Generates an animated global map plot of a certain value of data.
 }
+\details{
+Note: Expect inconsequential warnings when running this function that do not deter the 
+construction or alter the behavior of the animation plot in any way.
+}
 \examples{
 covid_data <- importCovidData()
 sars_data <- importSARSData()

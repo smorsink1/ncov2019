@@ -45,7 +45,7 @@ Value - option to input minimum/maximum values
 }
 \examples{
 filterDiseaseData(importCovidData(from_web = FALSE), country = c("Japan", "Italy", "US"))
-filterDiseaseData(importSARSData(), value_type = c("cases", "deaths"), min_value = 10)
+filterDiseaseData(importSARSData(), type = c("cases", "deaths"), min_value = 10)
 filterDiseaseData(importZikaData(), first_date = "2016-05-01", last_date = "2016-05-31")
 
 }

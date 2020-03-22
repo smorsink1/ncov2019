@@ -39,6 +39,6 @@ sars_data <- importSARSData()
 zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
 mapPlotAnimate(covid_data, fps = 6)
 mapPlotAnimate(sars_data, selected_value_type = "recovered")
-mapPlotAnimate(zika_data, color = "green", alpha = 0.7)
+mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
 
 }

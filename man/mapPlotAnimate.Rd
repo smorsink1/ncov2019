@@ -38,11 +38,7 @@ Note: Expect inconsequential warnings when running this function that do not det
 construction or alter the behavior of the animation plot in any way.
 }
 \examples{
-# covid_data <- importCovidData()
-# sars_data <- importSARSData()
-# zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
-# mapPlotAnimate(covid_data, fps = 6)
-# mapPlotAnimate(sars_data, selected_value_type = "recovered")
-# mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
+covid_data <- importCovidData(from_web = FALSE)
+mapPlotAnimate(covid_data)
 
 }

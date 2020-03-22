@@ -37,15 +37,12 @@ latitude and longitude data.
 Generates a static global map plot of a certain value of data.
 }
 \examples{
-covid_data <- importCovidData()
+covid_data <- importCovidData(from_web = FALSE)
 sars_data <- importSARSData()
-zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
 
-mapPlotStatic(covid_data, selected_date = "2020-03-19", 
+mapPlotStatic(covid_data, selected_date = "2020-03-01", 
 selected_value_type = "cases", alpha = 0.3)
 mapPlotStatic(sars_data, selected_date = "2003-04-02", 
 selected_value_type = "deaths", color = "purple")
-mapPlotStatic(zika_data, selected_date = "2016-05-03", 
-selected_value_type = "cases", color = "purple", congregate = TRUE)
 
 }

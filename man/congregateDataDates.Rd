@@ -23,6 +23,7 @@ growth of the data.
 }
 \examples{
 zika_raw <- importZikaData()
-congregateDataDates(zika_raw)
+zika_2015 <- filterDiseaseData(zika_raw, last_date = "2015-12-31")
+congregateDataDates(zika_2015)
 
 }

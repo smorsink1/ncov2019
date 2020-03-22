@@ -44,7 +44,7 @@ importCoordinateData <- function() {
 #' 
 #' @importFrom lubridate is.Date
 #' @importFrom magrittr %>% extract2
-#' @importFrom dplyr filter summarize mutate
+#' @importFrom dplyr filter group_by summarize mutate
 #' 
 #' @examples 
 #' covid_data <- importCovidData()
@@ -53,7 +53,7 @@ importCoordinateData <- function() {
 #' covid_us <- filterDiseaseData(covid_data, country = "US")
 #' dayOfDiseaseColumn(covid_us)
 #' 
-#' zika_data <- importZikaData()
+#' zika_data <- filterDiseaseData(importZikaData())
 #' dayOfDiseaseColumn(zika_data)
 #' 
 #' sars_data <- importSARSData()
@@ -69,10 +69,13 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
   } else if(!lubridate::is.Date(df$date)){
     stop('The \"date\" column must be of class \"Date\"')
   }
-  
+   
   first_date = df %>%
-    dplyr::filter(value_type == "cases" & value >= threshold) %>%
-    dplyr::summarize(first_date_df = min(unique(date))) %>%
+    dplyr::filter(value_type == "cases") %>%
+    dplyr::group_by(date) %>%
+    dplyr::summarize(total_cases_on_date = sum(value)) %>%
+    dplyr::filter(total_cases_on_date >= threshold) %>%
+    dplyr::summarize(min(date)) %>%
     magrittr::extract2(1)
   
   df = df %>%

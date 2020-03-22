@@ -11,7 +11,7 @@
 #' @param first_date The earliest date that is to be included in the returned data frame.
 #' @param last_date The latest date that is to be included in the returned data frame.
 #' @param country A vector of countries whose observations are to be included in the returned data frame.
-#' @param province A vector of provinces within the countries included in the regions vector
+#' @param prov A vector of provinces within the countries included in the regions vector
 #' whose observations are to be included in the returned data frame.
 #' @param type A vector of value types whose obbservations are to be included in the returned
 #' data frame. The options are "cases", "deaths", and "recovered", and it defaults to include all
@@ -35,7 +35,7 @@
 #' @export
 #'
 filterDiseaseData <- function(data, first_date = NA, last_date = NA, 
-                  country = c(), province = c(), type = c("cases", "deaths", "recovered"),
+                  country = c(), prov = c(), type = c("cases", "deaths", "recovered"),
                   min_value = 0, max_value = Inf, include_suspected = FALSE) {
   
   
@@ -48,7 +48,7 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
       data$value_type = "cases"
     }
   }
-  # 
+  
   if(!is.na(first_date) & !(as.Date(first_date) %in% seq(min(data$date), max(data$date), by = 1))) {
     stop(paste0("First date must be in the data set, which contains dates ", min(unique(data$date)), " to ", max(unique(data$date)), "."))
   }
@@ -64,9 +64,9 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
     warning(paste0('The country \"', country[i], '\" was not found in the data set. \n'))
   }
   
-  if(length(province) > 0 && !(province %in% data$province)){
-    i = !(province %in% data$province)
-    warning(paste0('The province \"', province[i], '\" was not found in the data set. \n'))
+  if(length(prov) > 0 && !(prov %in% data$province)){
+    i = !(prov %in% data$province)
+    warning(paste0('The province \"', prov[i], '\" was not found in the data set. \n'))
   }
   
   if(!(is.numeric(min_value) & is.numeric(max_value) & min_value >= 0 & max_value >= 0)) {
@@ -86,8 +86,8 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
   if(length(country) == 0) {
     country = unique(data$region)
   }
-  if(length(province) == 0 & ("province" %in% colnames(data))) {
-    province = unique(data$province)
+  if(length(prov) == 0 & ("province" %in% colnames(data))) {
+    prov = unique(data$province)
   }
   
   data = data %>%
@@ -98,7 +98,7 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
   
   if("province" %in% colnames(data)) {
     data = data %>%
-      dplyr::filter(province %in% province)
+      dplyr::filter(province %in% prov)
   }
   
   return(data)

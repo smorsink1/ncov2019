@@ -154,12 +154,12 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' @importFrom gganimate transition_time animate
 #' 
 #' @examples
-#' covid_data <- importCovidData()
-#' sars_data <- importSARSData()
-#' zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
-#' mapPlotAnimate(covid_data, fps = 6)
-#' mapPlotAnimate(sars_data, selected_value_type = "recovered")
-#' mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
+#' # covid_data <- importCovidData()
+#' # sars_data <- importSARSData()
+#' # zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
+#' # mapPlotAnimate(covid_data, fps = 6)
+#' # mapPlotAnimate(sars_data, selected_value_type = "recovered")
+#' # mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
 #' 
 #' @export
 #'

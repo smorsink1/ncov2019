@@ -19,6 +19,5 @@ Imports data from public github repo on Zika cases by date and location,
 }
 \examples{
 importZikaData()   # from_web defaults to FALSE
-importZikaData(from_web = TRUE) 
 
 }

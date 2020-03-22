@@ -21,8 +21,7 @@ Output is a dataframe with columns for province, region, lat, long,
 Pivots the data frame to make one row per location/date combo
 }
 \examples{
-tidyCovidData(scrapeCovidData())
-tidyCovidData(scrapeCovidData("cases"))
-tidyCovidData(scrapeCovidData("deaths"))
+tidyCovidData(scrapeCovidData("cases"), "cases")
+tidyCovidData(scrapeCovidData("deaths"), "deaths")
 
 }

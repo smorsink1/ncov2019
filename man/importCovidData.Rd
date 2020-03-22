@@ -18,7 +18,7 @@ Imports data from public github repo on Covid cases by date and location
   (with latitude and longitude), reformats, cleans, and merges with population data
 }
 \examples{
-importCovidData()                   # defaults to from_web = T
+importCovidData()                   # defaults to from_web = TRUE
 importCovidData(from_web = FALSE)   # returns historical subset of data
 
 }

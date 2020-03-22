@@ -18,6 +18,6 @@ Imports data from public github repo on SARS cases by date and location,
   reformats and cleans the data, and merges with population and latitude-longitude data
 }
 \examples{
-importSARSData()
+importSARSData()    # defaults to from_web = FALSE
 
 }

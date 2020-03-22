@@ -1,7 +1,7 @@
 context("Testing function for filtering disease data")
 
 test_that("filterDiseaseData works as expected", {
-  zika <- importZikaData(from_web = F)
+  zika <- importZikaData(from_web = FALSE)
   
   zika_confirmed <- filterDiseaseData(zika)
   expect_true(nrow(zika[which(zika$value_type == "cumulative_confirmed_cases"), ]) == nrow(zika_confirmed))

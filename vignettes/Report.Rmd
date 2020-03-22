@@ -3,7 +3,7 @@ title: "Report"
 author: "Matthew Colón and Silas Morsink"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Familiar with ncov2019}
+  %\VignetteIndexEntry{Report}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -33,16 +33,14 @@ Visualize disease statistics on a day-by-day basis
 covid_data <- importCovidData()
 us_covid_data <- filterDiseaseData(covid_data, country = "US")
 us_italy_covid_data <- filterDiseaseData(covid_data, country = c("US", "Italy"))
-plotTimeSeries(us_italy_covid_data, region = "all")  
-# will plot aggregate US & Italy cases
-
-plotTimeSeries(us_covid_data, plot_what = "cases")   
-# will plot US cases
-
+plotTimeSeries(us_italy_covid_data, group = "all")  # will plot aggregate US & Italy cases
+plotTimeSeries(us_covid_data, plot_what = "cases")  # will plot US cases
 plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region")   
 # will have one layer for log of US cases, another for log of Italy cases
+
 plotTimeSeries(us_italy_covid_data,plot_what="log_cases",group="region",x_axis="day_of_disease")   
 # will have one layer for log of US cases, another for log of Italy cases
+
 plotTimeSeries(us_covid_data, plot_what = "cases_per_pop")
 plotTimeSeries(us_covid_data, plot_what = "deaths_per_pop")
 plotTimeSeries(us_covid_data, plot_what = "pop_per_cases")

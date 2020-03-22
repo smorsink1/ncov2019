@@ -1,12 +1,19 @@
 ---
 title: "Report"
 author: "Matthew Colón and Silas Morsink"
-date: "3/21/2020"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Familiar with ncov2019}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
 library(ncov2019)
 library(magrittr)
 ```

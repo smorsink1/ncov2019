@@ -128,6 +128,9 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' 
 #' Generates an animated global map plot of a certain value of data.
 #' 
+#' Note: Expect inconsequential warnings when running this function that do not deter the 
+#' construction or alter the behavior of the animation plot in any way.
+#' 
 #' @param data The data frame that contains the data to be plotted on the world map.
 #' This data frame must contain the following columns: "long" (type "numeric"), 
 #' "lat" (type "numeric"), and "value" (type "numeric").

@@ -38,7 +38,7 @@
 #' plotTimeSeries(us_italy_covid_data, plot_what = "log_cases", group = "region")   
 #' # will have one layer for log of US cases, another for log of Italy cases
 #' plotTimeSeries(us_italy_covid_data,plot_what="log_cases",group="region",x_axis="day_of_disease")   
-# will have one layer for log of US cases, another for log of Italy cases
+#' # will have one layer for log of US cases, another for log of Italy cases
 #' plotTimeSeries(us_covid_data, plot_what = "cases_per_pop")
 #' plotTimeSeries(us_covid_data, plot_what = "deaths_per_pop")
 #' plotTimeSeries(us_covid_data, plot_what = "pop_per_cases")

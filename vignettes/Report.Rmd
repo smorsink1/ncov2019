@@ -1,6 +1,6 @@
 ---
 title: "Report"
-author: "Matthew Colón"
+author: "Matthew Colón and Silas Morsink"
 date: "3/21/2020"
 output: html_document
 ---
@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ncov2019)
+library(magrittr)
 ```
 
 ## Package Description and Challenges
@@ -32,8 +33,7 @@ Major challenges that arose included:
 For example, if a U.S. public health researcher is interested in looking at the percentage of the population infected with the Coronavirus in the U.S.A. compared to some heavily-affected European countries, they would complete the following workflow:
 
 ```{r use_case_1}
-use_case_1_data <- 
-    importCovidData() %>%
+use_case_1_data <- importCovidData() %>%
     filterDiseaseData(country = c("US", "Italy", "France", "Spain", "United Kingdom"))
 
 plotTimeSeries(use_case_1_data, plot_what = "cases_per_pop", group = "region", 

@@ -5,7 +5,7 @@
 \title{Animated Map Plot}
 \usage{
 mapPlotAnimate(data, first_date = NA, last_date = NA,
-  selected_value_type = NA, color = "red", alpha = 0.5, dps = 5)
+  selected_value_type = NA, color = "red", alpha = 0.5, fps = 10)
 }
 \arguments{
 \item{data}{The data frame that contains the data to be plotted on the world map.
@@ -24,7 +24,7 @@ and "recovered".}
 
 \item{alpha}{Transparency level of points on world map. Default is 0.5.}
 
-\item{dps}{Number of dates displayed per second for the animation. Default is 5.}
+\item{fps}{Number of frames displayed per second for the animation. Default is 10.}
 }
 \value{
 Output is an animated ggplot object which maps the chosen value on a world map using
@@ -37,7 +37,7 @@ Generates an animated global map plot of a certain value of data.
 covid_data <- importCovidData()
 sars_data <- importSARSData()
 zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
-mapPlotAnimate(covid_data, dps = 3)
+mapPlotAnimate(covid_data, fps = 6)
 mapPlotAnimate(sars_data, selected_value_type = "recovered")
 mapPlotAnimate(zika_data, color = "green", alpha = 0.7)
 

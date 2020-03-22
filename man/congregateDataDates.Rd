@@ -7,15 +7,14 @@
 congregateDataDates(df)
 }
 \arguments{
-\item{df}{a data frame for which the data values will be congregated to weekly dates.}
+\item{df}{A data frame for which the data values will be congregated to weekly dates.}
 }
 \value{
 Output is a data frame of the same format as the passed-in df, but with congregated dates.
 }
 \description{
-Because the Zika data was tracked on different dates in different locations, this function
-aligns and congregates the value counts on a weekly basis (taking the maximum if necessary) so that
-the dates in the data are aligned for all locations. This function is only to be used on Zika data.
+This function aligns and congregates data value counts on a weekly basis (taking the maximum if necessary)
+so that the dates in the data are aligned for all data value types at all locations.
 }
 \details{
 WARNING: This function manipulates the data in a way that makes the dates of observations 

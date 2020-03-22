@@ -51,9 +51,9 @@ use_case_2_data <- importCovidData()
 
 mapPlotStatic(use_case_2_data, selected_date = "2020-03-21", selected_value_type = "cases")
 
-suppressWarnings(
-    mapPlotAnimate(use_case_2_data, selected_value_type = "deaths", color = "black")
-)
+#suppressWarnings(
+#    mapPlotAnimate(use_case_2_data, selected_value_type = "deaths", color = "black")
+#)
 ```
 
 

@@ -1,0 +1,56 @@
+---
+title: "Report"
+author: "Matthew Colón"
+date: "3/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Package Description
+
+This package drastically improves the user's ability to import, filter, augment, and visualize disease data from the 2003 SARS virus, the 2015-16 Zika, and the 2020 Coronavirus.
+
+
+## Use Cases for our Package
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+```
+
+## Team Member Contributions
+
+### Silas Morsink
+Silas was responsible for the following:
+
+* Data Import/Cleaning
+    + Wrote functions to import, clean, and store Coronavirus data
+    + Wrote functions to import, clean, and store Zika data
+    + Wrote functions to import and store SARS data
+* Data Filtering/Augmentation
+    + Wrote the buildCoordinateMap function
+    + Wrote the buildPopulationMap function
+* Data Visualization
+    + Wrote the plotTimeSeries function
+* Package Documentation
+    + Wrote the package README file
+    + Wrote the package vignette
+
+### Matthew Colón
+Matthew was responsible for the following:
+
+* Data Import/Cleaning
+    + Cleaned the SARS data to be used in the package
+* Data Filtering/Augmentation
+    + Wrote the filterDiseaseData function
+    + Wrote the importCoordinateData function
+    + Wrote the dayOfDiseaseColumn function
+* Data Visualization
+    + Wrote the mapPlotStatic function
+    + Wrote the mapPlotAnimate function
+* Documentation
+    + Wrote the package project Report
+

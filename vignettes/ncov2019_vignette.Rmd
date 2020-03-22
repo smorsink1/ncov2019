@@ -29,11 +29,11 @@ zika_data <- importZikaData()      # default from_web = FALSE
 sars_data <- importSARSData()      # default from_web = FALSE
 ```
 
-Because Zika data and SARS data are no longer changing, it is not necessary to load data from the web. By setting `from_web = FALSE`, the function simply loads the data from the `data` directory. For COVID-19, to get the most up-to-date information, we need `from_web = TRUE` (the default). If you set `from_web = FALSE` for `importCovidData()`, the function will load the saved COVID-19 data from the `data` directory, which only goes through 2020-03-06. 
+Because Zika data and SARS data are no longer changing, it is not necessary to load data from the web. By setting `from_web = FALSE`, the function simply loads the data from the `data` directory. For COVID-19, to get the most up-to-date information, we need `from_web = TRUE` (the default). If you set `from_web = FALSE` for `importCovidData()`, the function will load the saved COVID-19 data from the `data` directory, which only goes through 2020-03-06.
 
-Behind the scenes, the `import` functions are using other functions for data acquisition and cleaning. These functions are also exported for the user to observe and potentially modify. `importCovidData()` calls `scrapeCovidData()` to pull data from the web, then `tidyCovidData()` to reformat it, then `accumulateCovidData()` to pull together data on cases, deaths, and recovered. `importZikaData()` calls `scrapeZikaData()` to pull data from the web, then `reformatZikaData()` to reformat it, then `cleanZikaData()` to reconcile data reporting differences. `importSARSData()` calls `scrapeSARSData()` to pull data from the web, then `cleanSARSData()` to reformat it and address data issues. 
+Behind the scenes, the `import` functions are using other functions for data acquisition and cleaning. These functions are also exported for the user to observe and potentially modify. `importCovidData()` calls `scrapeCovidData()` to pull data from the web, then `tidyCovidData()` to reformat it, then `accumulateCovidData()` to pull together data on cases, deaths, and recovered. `importZikaData()` calls `scrapeZikaData()` to pull data from the web, then `reformatZikaData()` to reformat it, then `cleanZikaData()` to reconcile data reporting differences. `importSARSData()` calls `scrapeSARSData()` to pull data from the web, then `cleanSARSData()` to reformat it and address data issues.
 
-## Filtering Data 
+## Filtering Data
 
 After importing disease data, the next step is to filter the data. `filterDiseaseData()` allows for easy filtering of the data by date, region (country), province (more specific location information than country), value type ("cases", "deaths", or "recovered"), and value (number of cases, deaths, or recovered). Although other data filtering options exist, `filterDiseaseData()` is preferrable in the context of the `ncov2019` package. The output is guaranteed to be compatible with the plotting functions, and `filterDiseaseData()` checks the input data for compatibility as well.   
 
@@ -125,4 +125,3 @@ plotTimeSeries(china_covid_cases_deaths, plot_what = "new_cases")
 plotTimeSeries(zika_data_may_include_suspected, plot_what = "cases", x_axis = "date")
 
 ```
-

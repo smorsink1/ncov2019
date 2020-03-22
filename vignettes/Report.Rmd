@@ -35,7 +35,7 @@ Major challenges that arose included:
 
 ## Use Cases for our Package
 
-**Use Case 1:** Public health researchers will use the package to quickly pull in relevant data from a variety of sources, using the visualization and calculation tools to investigate the spread of the disease and assist in future research. 
+**Use Case 1:** Public health researchers will use the package to quickly pull in relevant data from a variety of sources, using the visualization and calculation tools to investigate the spread of the disease and assist in future research.
 
 For example, if a U.S. public health researcher is interested in looking at the percentage of the population infected with the Coronavirus in the U.S.A. compared to some heavily-affected European countries, they would complete the following workflow:
 
@@ -43,7 +43,7 @@ For example, if a U.S. public health researcher is interested in looking at the 
 use_case_1_data <- importCovidData() %>%
     filterDiseaseData(country = c("US", "Italy", "France", "Spain", "United Kingdom"))
 
-plotTimeSeries(use_case_1_data, plot_what = "cases_per_pop", group = "region", 
+plotTimeSeries(use_case_1_data, plot_what = "cases_per_pop", group = "region",
                    x_axis = "day_of_disease")
 ```
 
@@ -94,4 +94,3 @@ Matthew was responsible for the following:
     + Wrote the mapPlotAnimate function
 * Documentation
     + Wrote the package project Report
-

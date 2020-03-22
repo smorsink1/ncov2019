@@ -59,12 +59,12 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
     stop("First date cannot be later than last date.")
   }
   
-  if(length(country) > 0 & !(country %in% data$region)){
+  if(length(country) > 0 && !(country %in% data$region)){
     i = !(country %in% data$region)
     warning(paste0('The country \"', country[i], '\" was not found in the data set. \n'))
   }
   
-  if(length(prov) > 0 & !(prov %in% data$province)){
+  if(length(prov) > 0 && !(prov %in% data$province)){
     i = !(prov %in% data$province)
     warning(paste0('The province \"', prov[i], '\" was not found in the data set. \n'))
   }

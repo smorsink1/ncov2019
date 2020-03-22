@@ -84,15 +84,14 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 
 #' Congregation of Data Dates
 #' 
-#' Because the Zika data was tracked on different dates in different locations, this function
-#' aligns and congregates the value counts on a weekly basis (taking the maximum if necessary) so that
-#' the dates in the data are aligned for all locations. This function is only to be used on Zika data.
+#' This function aligns and congregates data value counts on a weekly basis (taking the maximum if necessary)
+#' so that the dates in the data are aligned for all data value types at all locations.
 #' 
 #' WARNING: This function manipulates the data in a way that makes the dates of observations 
 #' less accurate, but in a way that is beneficial for plotting and understanding the cumulative
 #' growth of the data.
 #' 
-#' @param df a data frame for which the data values will be congregated to weekly dates.
+#' @param df A data frame for which the data values will be congregated to weekly dates.
 #' 
 #' @return Output is a data frame of the same format as the passed-in df, but with congregated dates.
 #' 
@@ -131,32 +130,32 @@ congregateDataDates <- function(df) {
     dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
   
   #------------------------------------------------------------------
-  small = function(r, df, new_df) {
-    if(length(df$province) > 0){
-      prov = new_df[r,"province"][[1]]
-    }
-    country = new_df[r,"region"][[1]]
-    value_type = new_df[r,"value_type"][[1]]
-    dt = as.Date(new_df[r,"date"][[1]])
-    narrowed = df %>%
-      dplyr::filter(region == country) %>%
-      dplyr::filter(value_type == value_type) %>%
-      dplyr::filter(date <= dt) %>%
-      dplyr::filter(date >= (as.Date(dt) - 6))
+  #small = function(r, df, new_df) {
+  #  if(length(df$province) > 0){
+  #    prov = new_df[r,"province"][[1]]
+  #  }
+  #  country = new_df[r,"region"][[1]]
+  #  value_type = new_df[r,"value_type"][[1]]
+  #  dt = as.Date(new_df[r,"date"][[1]])
+  #  narrowed = df %>%
+  #    dplyr::filter(region == country) %>%
+  #    dplyr::filter(value_type == value_type) %>%
+  #    dplyr::filter(date <= dt) %>%
+  #    dplyr::filter(date >= (as.Date(dt) - 6))
     
-    if(length(df$province) > 0) {
-      narrowed = narrowed %>%
-        dplyr::filter(province == prov)
-    }
+  #  if(length(df$province) > 0) {
+  #    narrowed = narrowed %>%
+  #      dplyr::filter(province == prov)
+  #  }
     
-    value = 0
-    if(nrow(narrowed) > 0) {
-      value = max(narrowed$value)
-    }
-    return(value)
-  }
+  #  value = 0
+  #  if(nrow(narrowed) > 0) {
+  #    value = max(narrowed$value)
+  #  }
+  #  return(value)
+  #}
 
-  value_vec = sapply(1:nrow(new_df), function(x) small(x, df, new_df))
+  #value_vec = sapply(1:nrow(new_df), function(x) small(x, df, new_df))
   #------------------------------------------------------------------
   
   
@@ -195,7 +194,6 @@ congregateDataDates <- function(df) {
     value_vec = c(value_vec, value)
   }
   
-  value_vec
   # Add value column and reformat data frame to match previous format
   new_df = new_df %>%
     dplyr::mutate(value = value_vec) %>%

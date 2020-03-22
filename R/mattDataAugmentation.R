@@ -102,11 +102,11 @@ dayOfDiseaseColumn <- function(df, threshold = 100) {
 #'  
 #' @examples
 #' zika_raw <- importZikaData()
-#' congregateDataDates(zika_raw)
+#' zika_2015 <- filterDiseaseData(zika_raw, last_date = "2015-12-31")
+#' congregateDataDates(zika_2015)
 #' 
 #' @export
 #'
-
 congregateDataDates <- function(df) {
   # Check that this is all the same disease 
   if (length(unique(df$disease)) != 1) {

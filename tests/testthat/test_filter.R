@@ -51,7 +51,7 @@ test_that("filterDiseaseData works as expected", {
   expect_error(filterDiseaseData(zika, min_value = -18))
                
   
-  sars <- importSARSData(from_web = F)
+  sars <- importSARSData(from_web = FALSE)
   sars_all <- filterDiseaseData(sars, first_date = "2003-05-01", last_date = "2003-05-31")
   expect_true(length(unique(sars_all$value_type)) == 3 & 
                 "cases" %in% sars_all$value_type & 

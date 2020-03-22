@@ -48,7 +48,7 @@
 #' @export 
 #' 
 plotTimeSeries <- function(data, plot_what = "cases", group = "all", x_axis = "date") {
-  if (data$disease == "zika") {
+  if (unique(data$disease)[1] == "zika") {
     data <- congregateDataDates(data)
   }
   names(data)[grepl("pop", names(data))] <- "pop"

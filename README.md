@@ -8,6 +8,10 @@
 
 Note: this package helps the user interact with reported data. Reported data may not be accurate, potentially due to reporting issues but more prominently due to issues with the availability of testing. Increases in "cases" may be due to increases in the number of infected people, but also may just be a result of more people getting tested. To more fully understand the state of COVID-19, we encourage the user to supplement the data available in this package with data on the amount of testing. 
 
+## Installation
+
+To install from R, use `devtools::install_github("smorsink1/ncov2019")`
+
 ## Functionality
 
 The package functionality has three main phases: importing data, filtering data, and visualizing data.

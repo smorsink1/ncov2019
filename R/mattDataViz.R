@@ -156,10 +156,12 @@ mapPlotStatic <- function(data, selected_date = NA, selected_value_type = NA, co
 #' zika_data <- filterDiseaseData(importZikaData(), include_suspected = FALSE)
 #' mapPlotAnimate(covid_data, fps = 6)
 #' mapPlotAnimate(sars_data, selected_value_type = "recovered")
-#' mapPlotAnimate(zika_data, color = "green", alpha = 0.7)
+#' mapPlotAnimate(zika_data, color = "dark green", alpha = 0.7)
 #' 
 #' @export
 #'
+
+
 mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value_type = NA, color = 'red', alpha = 0.5, fps = 10) {
   # Ensures longitude column is present in data
   if(!("long" %in% colnames(data)) | !is.numeric(data$long)) {
@@ -197,6 +199,9 @@ mapPlotAnimate <- function(data, first_date = NA, last_date = NA, selected_value
   # Congregates Zika data
   if(unique(data$disease)[1] == "zika") {
     data = congregateDataDates(data)
+    if(is.na(selected_value_type)) {
+      selected_value_type = "cases"
+    }
   }
   
   # Eliminates NA rows found in SARS data

@@ -49,6 +49,10 @@ filterDiseaseData <- function(data, first_date = NA, last_date = NA,
     }
   }
   
+  if(length(first_date) > 1 | length(last_date) > 1) {
+    stop("First and last date cannot be vectors of multiple dates.")
+  }
+  
   if(!is.na(first_date) & !(as.Date(first_date) %in% seq(min(data$date), max(data$date), by = 1))) {
     stop(paste0("First date must be in the data set, which contains dates ", min(unique(data$date)), " to ", max(unique(data$date)), "."))
   }

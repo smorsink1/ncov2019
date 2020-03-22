@@ -28,7 +28,7 @@ dayOfDiseaseColumn(covid_data)
 covid_us <- filterDiseaseData(covid_data, country = "US")
 dayOfDiseaseColumn(covid_us)
 
-zika_data <- importZikaData()
+zika_data <- filterDiseaseData(importZikaData())
 dayOfDiseaseColumn(zika_data)
 
 sars_data <- importSARSData()

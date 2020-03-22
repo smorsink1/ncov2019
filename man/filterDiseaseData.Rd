@@ -5,7 +5,7 @@
 \title{Filter Data Frame}
 \usage{
 filterDiseaseData(data, first_date = NA, last_date = NA,
-  country = c(), province = c(), type = c("cases", "deaths",
+  country = c(), prov = c(), type = c("cases", "deaths",
   "recovered"), min_value = 0, max_value = Inf,
   include_suspected = FALSE)
 }
@@ -18,7 +18,7 @@ filterDiseaseData(data, first_date = NA, last_date = NA,
 
 \item{country}{A vector of countries whose observations are to be included in the returned data frame.}
 
-\item{province}{A vector of provinces within the countries included in the regions vector
+\item{prov}{A vector of provinces within the countries included in the regions vector
 whose observations are to be included in the returned data frame.}
 
 \item{type}{A vector of value types whose obbservations are to be included in the returned

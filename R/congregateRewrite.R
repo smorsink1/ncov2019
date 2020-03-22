@@ -1,140 +1,95 @@
-congregateDataDates <- function(df) {
-  # Check that this is all the same data
-  if(length(unique(df$disease)) != 1) {
-    stop("'disease' column has multiple entries, function can only be used on one disease")
-  }
-  pop_col_name <- names(df)[grepl("pop_", names(df))]
-  names(df)[grepl("pop_", names(df))] <- "pop"
-  
-  # Identify first and last dates
-  first_date = as.Date(min(df$date))
-  last_date = as.Date(max(df$date))
-  # Sequence of weekly dates
-  dates_used = seq(first_date, last_date, by = "weeks")
-  
-  getCongregateDate <- function(d) {
-    return (as.Date(dates_used[which.min(abs(dates_used - as.Date(d)))]))
-  }
-  df$congregate_date <- Reduce(c, purrr::map(df$date, getCongregateDate))
-  
-  # Determine all unique location-type combinations
-  if ("province" %in% names(df)) {
-    unique_locations <- unique(df[, c("province", "region", "value_type")])
-  } else {
-    unique_locations = unique(df[, c("region", "value_type")])
-  }
-  
-  getCongregatedValue <- function(df, date, start_date, type, reg, prov = NA) {
-    subset <- df %>%
-      dplyr::filter(date >= start_date & date <= date) %>%
-      dplyr::filter(value_type == type) %>%
-      dplyr::filter(region == reg)
-    if (!is.na(prov)) {
-      subset <- subset %>%
-        dplyr::filter(province == prov)
-    }
-    if (nrow(subset) < 1) {
-      return (0)
-    }
-    max_value <- max(subset$value)
-    result <- c("congregate_date" = date, "value_type" = type, "region" = reg, "value" = max_value)
-    if (!is.na(prov)) {
-      result <- c(result, "province" = prov)
-    }
-    return (result)
-  }
-  
-  purrr::pmap_dfr(list(dates_used, 
-                       unique_locations$value_type,
-                       unique_locations$region,
-                       unique_locations$province), getCongregatedValue,
-                  start_date = first_date, df = df)
-  
-  getCongregatedValue()
-  
-  
-  # Create data frame which has a row for each unique province-region-dates_used combination
-  new_df = unique_locations %>%
-    dplyr::mutate(disease = df$disease[1]) %>%
-    dplyr::slice(rep(1:(dplyr::n()), each = length(dates_used))) %>%
-    dplyr::mutate(date = as.Date(rep(dates_used, times = nrow(unique_locations))))
-  
-  
-  
-  
-  
-  
-  
-  #------------------------------------------------------------------
-  small = function(r, df, new_df) {
-    if(length(df$province) > 0){
-      prov = new_df[r,"province"][[1]]
-    }
-    country = new_df[r,"region"][[1]]
-    value_type = new_df[r,"value_type"][[1]]
-    dt = as.Date(new_df[r,"date"][[1]])
-    narrowed = df %>%
-      dplyr::filter(region == country) %>%
-      dplyr::filter(value_type == value_type) %>%
-      dplyr::filter(date <= dt) %>%
-      dplyr::filter(date >= (as.Date(dt) - 6))
-    
-    if(length(df$province) > 0) {
-      narrowed = narrowed %>%
-        dplyr::filter(province == prov)
-    }
-    
-    value = 0
-    if(nrow(narrowed) > 0) {
-      value = max(narrowed$value)
-    }
-    return(value)
-  }
-  
-  value_vec = sapply(1:nrow(new_df), function(x) small(x, df, new_df))
-  #------------------------------------------------------------------
-  
-  
-  # for-loop which idenitifies the max value from prior week to fill into new data frame
-  value_vec = c()
-  for(i in 1:nrow(new_df)) {
-    if(length(df$province) > 0){
-      prov = new_df[i,"province"][[1]]
-    }
-    country = new_df[i,"region"][[1]]
-    value_type = new_df[i,"value_type"][[1]]
-    dt = as.Date(new_df[i,"date"][[1]])
-    narrowed = df %>%
-      dplyr::filter(region == country) %>%
-      dplyr::filter(value_type == value_type) %>%
-      dplyr::filter(date <= dt) %>%
-      dplyr::filter(date >= (as.Date(dt) - 6))
-    
-    if(length(df$province) > 0) {
-      narrowed = narrowed %>%
-        dplyr::filter(province == prov)
-    }
-    
-    value = 0
-    if(nrow(narrowed) > 0) {
-      value = max(narrowed$value)
-    } else {
-      # If no data from prior week, fill in data value from week before
-      if(i > 1 && 
-         new_df$province[i - 1] == prov && 
-         new_df$region[i - 1] == country &&
-         new_df$value_type[i - 1] == value_type) {
-        value = value_vec[i - 1]
-      }
-    }
-    value_vec = c(value_vec, value)
-  }
-  
-  value_vec
-  # Add value column and reformat data frame to match previous format
-  new_df = new_df %>%
-    dplyr::mutate(value = value_vec) %>%
-    dplyr::select(disease, province, region, date, value, value_type, pop_2016, lat, long)
-  
-  return(new_df)
-}
+
+#' #' Congregation of Data Dates
+#' #' 
+#' #' This function aligns and congregates data value counts on a weekly basis (taking the maximum if necessary)
+#' #' so that the dates in the data are aligned for all data value types at all locations.
+#' #' 
+#' #' WARNING: This function manipulates the data in a way that makes the dates of observations 
+#' #' less accurate, but in a way that is beneficial for plotting and understanding the cumulative
+#' #' growth of the data.
+#' #' 
+#' #' @param df A data frame for which the data values will be congregated to weekly dates.
+#' #' 
+#' #' @return Output is a data frame of the same format as the passed-in df, but with congregated dates.
+#' #' 
+#' #' @importFrom purrr map pmap_dfr
+#' #' @importFrom tibble tibble 
+#' #' @importFrom dplyr left_join select rename distinct slice mutate n
+#' #'  
+#' #' @examples
+#' #' zika_raw <- importZikaData()
+#' #' congregateDataDates(zika_raw)
+#' #' 
+#' #' @export
+#' #'
+#' 
+#' congregateDataDates <- function(df) {
+#'   # Check that this is all the same disease 
+#'   if (length(unique(df$disease)) != 1) {
+#'     stop("'disease' column has multiple entries, function can only be used on one disease")
+#'   }
+#'   pop_col_name <- names(df)[grepl("pop_", names(df))]
+#'   names(df)[grepl("pop_", names(df))] <- "pop"
+#'   
+#'   # Identify first and last dates
+#'   first_date = min(as.Date(df$date))
+#'   last_date = max(as.Date(df$date)) + 7
+#'   # Sequence of weekly dates
+#'   dates_used = seq(first_date, last_date, by = "weeks")
+#'   
+#'   if ("province" %in% names(df)) {
+#'     map_df <- df[!duplicated(df[, c("province", "region", "value_type")]), ]
+#'   } else {
+#'     map_df <- df[!duplicated(df[, c("region", "value_type")]), ]
+#'   }
+#'   
+#'   map_df_upd <- map_df %>%
+#'     dplyr::slice(rep(1:(dplyr::n()), each = length(dates_used))) %>%
+#'     dplyr::mutate(congregate_date = as.Date(dates_used))
+#'   
+#'   getCongregateValue <- function(date_congregate, type, reg, prov) {
+#'     date_congregate <- as.Date(date_congregate)
+#'     subset <- df[(df$date >= first_date & df$date <= date_congregate) & df$value_type == type & df$region == reg, ]
+#'     if (!is.na(prov)) {
+#'       subset <- subset[subset$province == prov, ]
+#'     }
+#'     max_value <- suppressWarnings(max(max(subset$value), 0))
+#'     result <- tibble::tibble("congregate_date" = as.character(date_congregate), "value_type" = type, "region" = reg, "value" = max_value)
+#'     if (!is.na(prov)) {
+#'       result[["province"]] <- prov
+#'     }
+#'     return (result)
+#'   }
+#'   
+#'   if ("province" %in% names(df)) {
+#'     congregated <- purrr::pmap_dfr(list(map_df_upd$congregate_date,
+#'                                         map_df_upd$value_type,
+#'                                         map_df_upd$region,
+#'                                         map_df_upd$province), getCongregateValue)
+#'   } else {
+#'     congregated <- purrr::pmap_dfr(list(map_df_upd$congregate_date,
+#'                                         map_df_upd$value_type,
+#'                                         map_df_upd$region,
+#'                                         rep(NA, nrow(map_df_upd))), getCongregateValue)
+#'   }
+#'   congregated$congregate_date <- as.Date(congregated$congregate_date)
+#'   
+#'   if ("province" %in% names(df)) {
+#'     joined <- congregated %>%
+#'       dplyr::left_join(df, by = c("value_type" = "value_type",
+#'                                   "region" = "region",
+#'                                   "province" = "province"))
+#'   } else {
+#'     joined <- congregated %>%
+#'       dplyr::left_join(df, by = c("value_type" = "value_type",
+#'                                   "region" = "region"))
+#'   }
+#'   final <- joined %>%
+#'     dplyr::select(-value.y, -date) %>%
+#'     dplyr::rename("value" = "value.x", "date" = "congregate_date") %>%
+#'     dplyr::select(disease, province, region, date, value, value_type, pop, lat, long) %>%
+#'     dplyr::rename(!!pop_col_name := "pop") %>%
+#'     dplyr::distinct()
+#'   return (final)
+#' }
+#' 

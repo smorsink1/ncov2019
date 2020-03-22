@@ -4,7 +4,7 @@
 \alias{importSARSData}
 \title{Import SARS data}
 \usage{
-importSARSData(from_web = F)
+importSARSData(from_web = FALSE)
 }
 \arguments{
 \item{from_web}{defaults to FALSE: whether to import from the web or from the package}

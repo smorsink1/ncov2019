@@ -4,7 +4,7 @@
 \alias{importCovidData}
 \title{Import Covid Data}
 \usage{
-importCovidData(from_web = T)
+importCovidData(from_web = TRUE)
 }
 \arguments{
 \item{from_web}{defaults to TRUE: whether to import from the web or from the package}
@@ -18,7 +18,7 @@ Imports data from public github repo on Covid cases by date and location
   (with latitude and longitude), reformats, cleans, and merges with population data
 }
 \examples{
-importCovidData()               # defaults to from_web = T
-importCovidData(from_web = F)   # returns historical subset of data
+importCovidData()                   # defaults to from_web = T
+importCovidData(from_web = FALSE)   # returns historical subset of data
 
 }

@@ -27,7 +27,7 @@ scrapeZikaData <- function() {
     # given a string and a character, 
     # removes the everything from the first appearance of specified character onwards
     string %>%
-      strsplit(char, fixed = T) %>%
+      strsplit(char, fixed = TRUE) %>%
       `[[`(1) %>%
       `[`(1)
   }
@@ -105,7 +105,7 @@ cleanZikaData <- function() {
     dplyr::filter(value_type %in% c("cumulative_confirmed_imported_cases", 
                                     "cumulative_confirmed_local_cases")) %>%
     dplyr::group_by(disease, province, region, date) %>%
-    dplyr::summarize(value = sum(value, na.rm = T)) %>%
+    dplyr::summarize(value = sum(value, na.rm = TRUE)) %>%
     dplyr::mutate(value_type = "cumulative_confirmed_cases")
   # Brazil
   data_split[["Brazil"]] <- data_split[["Brazil"]] %>%
@@ -116,7 +116,7 @@ cleanZikaData <- function() {
   data_split[["Colombia"]] <- data_split[["Colombia"]] %>%
     tidyr::pivot_wider(names_from = value_type, values_from = value, values_fn = list(value = sum)) %>%
     dplyr::group_by(disease, province, region, date) %>%
-    dplyr::summarize("value" = sum(zika_confirmed_laboratory, na.rm = T) + sum(zika_confirmed_clinic, na.rm = T)) %>%
+    dplyr::summarize("value" = sum(zika_confirmed_laboratory, na.rm = TRUE) + sum(zika_confirmed_clinic, na.rm = TRUE)) %>%
     dplyr::mutate(value_type = "cumulative_confirmed_cases")
   # Dominican_Republic
   data_split[["Dominican_Republic"]] <- data_split[["Dominican_Republic"]] %>%
@@ -202,11 +202,11 @@ cleanZikaData <- function() {
 #' 
 #' @examples 
 #' importZikaData()   # from_web defaults to FALSE
-#' importZikaData(from_web = T) 
+#' importZikaData(from_web = TRUE) 
 #' 
 #' @export
 #' 
-importZikaData <- function(from_web = F) {
+importZikaData <- function(from_web = FALSE) {
   if (!from_web) {
     data("zika_data", envir = environment())
     return (zika_data)

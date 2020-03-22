@@ -118,12 +118,12 @@ accumulateCovidData <- function() {
 #' @importFrom dplyr left_join select
 #' 
 #' @examples 
-#' importCovidData()               # defaults to from_web = T
-#' importCovidData(from_web = F)   # returns historical subset of data
+#' importCovidData()                   # defaults to from_web = T
+#' importCovidData(from_web = FALSE)   # returns historical subset of data
 #' 
 #' @export
 #' 
-importCovidData <- function(from_web = T) {
+importCovidData <- function(from_web = TRUE) {
   if (!from_web) {
     utils::data("covid_data", envir = environment())
     return (covid_data)

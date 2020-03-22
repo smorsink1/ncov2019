@@ -79,7 +79,7 @@ cleanSARSData <- function() {
 #'
 #' @export
 #' 
-importSARSData <- function(from_web = F) {
+importSARSData <- function(from_web = FALSE) {
   if (!from_web) {
     utils::data("sars_data", envir = environment())
     return (sars_data)

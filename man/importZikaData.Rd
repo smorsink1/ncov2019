@@ -4,7 +4,7 @@
 \alias{importZikaData}
 \title{Import Zika Data}
 \usage{
-importZikaData(from_web = F)
+importZikaData(from_web = FALSE)
 }
 \arguments{
 \item{from_web}{defaults to FALSE: whether to import from the web or from the package}
@@ -19,6 +19,6 @@ Imports data from public github repo on Zika cases by date and location,
 }
 \examples{
 importZikaData()   # from_web defaults to FALSE
-importZikaData(from_web = T) 
+importZikaData(from_web = TRUE) 
 
 }

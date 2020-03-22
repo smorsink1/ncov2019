@@ -5,7 +5,8 @@ Authors@R: c(person("Silas", "Morsink", email = "sjm.si.si@gmail.com",
                      role = c("aut", "cre")),
              person("Matthew", "Colon", email = "",
                     role = c("aut")))
-Description: What the package does (one paragraph).
+Description: Import data on COVID-19, Zika, and SARS, filter it, and visualize it on a
+  world map or on time-series graphs.
 Depends: R (>= 3.6.2)
 Imports: ggplot2 (>= 3.0.0), dplyr, ggthemes, gifski, lubridate, magrittr, 
   purrr, readr, rlang, rvest, tibble, tidyr, tidyselect, xml2, gganimate
